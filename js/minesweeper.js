@@ -102,7 +102,16 @@ function resetGame() {
 
 function onChangeDifficulty(elBtn) 
 {
-    gBoardSize = +elBtn.innerText
+    var elTxt = elBtn.innerText
+
+    if (elTxt === 'Easy'){
+        gBoardSize = 16
+    } else if (elTxt === 'Medium') {
+        gBoardSize = 64
+    } else {
+        gBoardSize = 144
+    }
+    
     onInit()
 }
 
