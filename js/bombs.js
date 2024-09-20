@@ -1,6 +1,6 @@
 'use strict'
 
-function palceMines()
+function placeMines()
 {
     let mineCount = gLevel.MINES
 

@@ -51,18 +51,19 @@ function buildBoard()
         gBoard[i] = []
         for (var j = 0; j < boardSize; j++)
         {
-            let currCell = gBoard[i][j]
-            currCell = 
+            let currCell = 
             {
                 negMinesCount: 0,
                 isShown: false,
                 isMine: false,
                 isMarked: false,
             }
+
+            gBoard[i][j] = currCell
         }
     }
 
-    palceMines()
+    placeMines()
     setMinesNegsCount()
     renderBoard()
 }
@@ -132,8 +133,6 @@ function showMoreCells(cellI, cellJ)
         }
     }
 }
-
-
 
 
 function startTimer() {
