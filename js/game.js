@@ -70,23 +70,35 @@ function buildBoard()
 
 
 
+function renderBoard()
+{
+    var strHTML = '<table>'
 
-//     var strHTML = ''
-
-//     for (var i = 0; i < boardSize; i++) {
-//         strHTML += '<tr>' // tr = table row
+    for (var i = 0; i < gBoard.length; i++) 
+    {
+        strHTML += '<tr>' 
         
-//         for (var j = 0; j < boardSize; j++) {
-//             // td = table data / cell
-//             strHTML += ` 
-//                 <td class="btn-num"
-//                     onclick="onCellClicked(this)">
-//                 </td>`
-//         }
-//         strHTML += '</tr>'
-//     }
-//     document.querySelector('table').innerHTML = strHTML
-// }
+        for (var j = 0; j < gBoard.length; j++) 
+        {
+            let cellClass = ''
+
+            if(gBoard[i][j].isShown)
+            {
+                cellClass = "shown"
+            }
+
+            strHTML += ` 
+                <td 
+                    class="cell-${i}-${j} ${cellClass}" 
+                    onclick="onCellClicked(this, ${i}, ${j})">
+                </td>`
+        }
+        strHTML += '</tr>'
+    }
+
+    strHTML +='</table>'
+    document.querySelector('.card-game').innerHTML = strHTML
+}
 
 
 function onCellClicked(elCell, i, j) 

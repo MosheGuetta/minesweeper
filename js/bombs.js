@@ -23,7 +23,7 @@ function setMinesNegsCount()
     {
         for (var j = 0; j < gBoard.length; j++)
         {
-            currCell = gBoard[i][j]
+            let currCell = gBoard[i][j]
             currCell.negMinesCount = countNegMinesArround(i,j)
         }
     }
