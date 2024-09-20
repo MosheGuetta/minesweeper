@@ -138,13 +138,52 @@ function showMoreCells(cellI, cellJ)
 
             const currCell = gBoard[i][j]
 
+            const elCell = document.querySelector(`.cell-${i}-${j}`)
+
             if (!currCell.isShown && !currCell.isMine) 
             {
-                onCellClicked(document.querySelector(`.currCell-${i}-${j}`), i, j)
+                onCellClicked(elCell, i, j)
             }
         }
     }
 }
+
+
+function showMines() 
+{
+    for (var i = 0; i < gBoard.length; i++) 
+    {
+        for (var j = 0; j < gBoard[i].length; j++) 
+        {
+            let currCell = gBoard[i][j]
+            if (currCell.isMine) 
+            {
+                const elCell = document.querySelector(`.cell-${i}-${j}`)
+                elCell.classList.add('shown')
+                elCell.innerText = BOMB
+            }
+        }
+    }
+    alert('Game over! You hit a mine.')
+    gGame.isOn = false
+    clearInterval(gTimerInterval)
+}
+
+
+
+function checkGameOver() 
+{
+    let totalCells = gBoard.length * gBoard[0].length
+    let nonMineCells = totalCells - gLevel.MINES
+
+    if (gGame.shownCount === nonMineCells) 
+    {
+        alert('You won!')
+        gGame.isOn = false
+        clearInterval(gTimerInterval)
+    }
+}
+
 
 
 function startTimer() {
