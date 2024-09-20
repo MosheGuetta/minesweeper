@@ -9,6 +9,12 @@ var gBoardSize = 16
 var gTimerInterval // holds the interval
 var gStartTime // what time the game strats
 
+const EMPTY = ''
+const BOMB = '💣'
+
+let gBombsCount
+
+const gGame
 
 function onInit() 
 {
@@ -43,9 +49,9 @@ function createBoard() {
 }
 
 
-function onCellClicked(elCell, clickedNum) 
+function onCellClicked(elCell, clickedCell) 
 {
-    if (clickedNum !== gNextNum) return
+    if (clickedCell === gNextNum) return
 
     if (clickedNum === 1) startTimer()
         
@@ -111,9 +117,3 @@ function onChangeDifficulty(elBtn)
     onInit()
 }
 
-
-function getRandomInt(min, max) {
-    var minCeiled = Math.ceil(min)
-    var maxFloored = Math.floor(max)
-    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled)
-}
