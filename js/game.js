@@ -35,7 +35,6 @@ function onInit()
     var elTimer = document.querySelector('.timer')
     elTimer.innerText = INITIAL_TIMER_TEXT
 
-    var gNextNum = 1
     gGame.isOn = true
     buildBoard()
     
@@ -85,43 +84,105 @@ function palceMines()
     }
 }
 
-
-
-
-
-
-
-
-
-    var strHTML = ''
-
-    for (var i = 0; i < boardSize; i++) {
-        strHTML += '<tr>' // tr = table row
-        
-        for (var j = 0; j < boardSize; j++) {
-            // td = table data / cell
-            strHTML += ` 
-                <td class="btn-num"
-                    onclick="onCellClicked(this)">
-                </td>`
-        }
-        strHTML += '</tr>'
-    }
-    document.querySelector('table').innerHTML = strHTML
-}
-
-
-function onCellClicked(elCell, clickedCell) 
+function setMinesNegsCount()
 {
-    if (clickedCell === gNextNum) return
-
-    if (clickedNum === 1) startTimer()
-        
-    if (clickedNum === gBoardSize) clearInterval(gTimerInterval)
-
-    elCell.classList.add('selected')
-    gNextNum++
+    for (var i = 0; i < gBoard.length; i++)
+    {
+        for (var j = 0; j < gBoard.length; j++)
+        {
+            currCell = gBoard[i][j]
+            currCell.negMinesCount = countNegMinesArround(i,j)
+        }
+    }
 }
+
+function countNegMinesArround(cellI, cellJ)
+{
+    let mineCount = 0
+    for(var i = cellI - 1; i<cellI + 1; i++)
+    {
+        for(var j = cellJ - 1; j<= cellJ + 1; j++)
+        {
+            if(i === cellI && j === cellJ) continue
+            if (i < 0 || j < 0 || i >= gBoard.length || j>= gBoard.length) continue
+            if (gBoard[i][j].isMine) mineCount ++
+        }
+    }
+    return mineCount
+}
+
+
+
+
+
+
+
+
+
+//     var strHTML = ''
+
+//     for (var i = 0; i < boardSize; i++) {
+//         strHTML += '<tr>' // tr = table row
+        
+//         for (var j = 0; j < boardSize; j++) {
+//             // td = table data / cell
+//             strHTML += ` 
+//                 <td class="btn-num"
+//                     onclick="onCellClicked(this)">
+//                 </td>`
+//         }
+//         strHTML += '</tr>'
+//     }
+//     document.querySelector('table').innerHTML = strHTML
+// }
+
+
+function onCellClicked(elCell, i, j) 
+{
+    const currCell = gBoard[i][j]
+
+    if(currCell.isShown || currCell.isMarked) return
+
+    if(currCell.isMine)
+    {
+        showMines()
+        return
+    }
+
+    currCell.isShown = true
+
+    elCell.classList.add('shown')
+    elCell.innerText = currCell.negMinesCount > 0 ? currCell.negMinesCount : ''
+
+    if(currCell.negMinesCount === 0)
+    {
+        showMoreCells(i,j)
+    }
+
+    checkGameOver()
+}
+
+function showMoreCells(cellI, cellJ)
+{
+    for (var i = cellI - 1; i <= cellI + 1; i++) 
+    {
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) 
+        {
+            if (i === cellI && j === cellJ) continue
+
+            if (i < 0 || j < 0 || i >= gBoard.length || j >= gBoard.length) continue
+
+            const currCell = gBoard[i][j]
+
+            if (!currCell.isShown && !currCell.isMine) 
+            {
+                onCellClicked(document.querySelector(`.currCell-${i}-${j}`), i, j)
+            }
+        }
+    }
+}
+
+
 
 
 function startTimer() {
