@@ -4,17 +4,29 @@ const TIMER_INTERVAL = 31 // how ofen the timer updataes. with prime number
 //                              we can see all of the milseconds
 const INITIAL_TIMER_TEXT = '00:00.000' // the way the timer will look like
 
-var gBoardSize = 16
-
-var gTimerInterval // holds the interval
-var gStartTime // what time the game strats
-
 const EMPTY = ''
 const BOMB = '💣'
 
-let gBombsCount
+let gBoardSize = 16
+let gLevel = 
+{
+    SIZE: 4,
+    MINES: 2
+}
 
-const gGame
+let gGame = 
+{
+    isOn: false,
+    shownCount: 0,
+    markedCount: 0,
+    timePassed: 0,
+}
+
+let gBoard = []
+let gBombsCount
+let gTimerInterval // holds the interval
+let gStartTime // what time the game strats
+
 
 function onInit() 
 {
@@ -24,13 +36,63 @@ function onInit()
     elTimer.innerText = INITIAL_TIMER_TEXT
 
     var gNextNum = 1
-    createBoard()
+    gGame.isOn = true
+    buildBoard()
     
 }
 
 
-function createBoard() {
+function buildBoard() 
+{
     var boardSize = Math.sqrt(gBoardSize)
+    gBoard = []
+
+    for (var i = 0; i < boardSize; i++)
+    {
+        gBoard[i] = []
+        for (var j = 0; j < boardSize; j++)
+        {
+            let currCell = gBoard[i][j]
+            currCell = 
+            {
+                negMinesCount: 0,
+                isShown: false,
+                isMine: false,
+                isMarked: false,
+            }
+        }
+    }
+
+    palceMines()
+    setMinesNegsCount()
+    renderBoard()
+}
+
+function palceMines()
+{
+    let mineCount = gLevel.MINES
+
+    while (mineCount > 0)
+    {
+        const i = getRandomInt(0, Math.sqrt(gBoardSize))
+        const j = getRandomInt(0, Math.sqrt(gBoardSize))
+
+        if(!gBoard[i][j].isMine)
+        {
+            gBoard[i][j].isMine = true
+            mineCount --
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
     var strHTML = ''
 
     for (var i = 0; i < boardSize; i++) {
