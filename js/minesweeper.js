@@ -6,8 +6,6 @@ const INITIAL_TIMER_TEXT = '00:00.000' // the way the timer will look like
 
 var gBoardSize = 16
 
-var gNums = []
-
 var gTimerInterval // holds the interval
 var gStartTime // what time the game strats
 
@@ -19,10 +17,9 @@ function onInit()
     var elTimer = document.querySelector('.timer')
     elTimer.innerText = INITIAL_TIMER_TEXT
 
-    gNextNum = 1
-
-    createNums()
+    var gNextNum = 1
     createBoard()
+    
 }
 
 
