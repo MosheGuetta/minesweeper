@@ -37,8 +37,7 @@ function createBoard() {
             // td = table data / cell
             strHTML += ` 
                 <td class="btn-num"
-                    onclick="onCellClicked(this, ${randomNum})">
-                    ${randomNum}
+                    onclick="onCellClicked(this)">
                 </td>`
         }
         strHTML += '</tr>'
@@ -111,7 +110,7 @@ function onChangeDifficulty(elBtn)
     } else {
         gBoardSize = 144
     }
-    
+
     onInit()
 }
 
