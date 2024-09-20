@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/minesweeper.css" />
+    <title>Mine Sweeper</title>
+</head>
+
+<body onload="onInit()">
+    <div class="container">
+        <h1>Mine Sweeper</h1>
+        <div class="card-game">
+            <table></table>
+        </div>
+
+        <div>
+            <span>Next: <span class="next-number"></span></span> 
+            <br /> 
+            <span>Time: <span class="timer"></span></span>
+        </div>
+
+        <div>
+            <button class="btn reset" onclick="resetGame()">New Game</button>
+        </div>
+
+        <div class="difficulty-container">
+            <h4>Difficulty</h4>
+            <button onclick="onChangeDifficulty(this)" class="btn difficulty">16</button>
+            <button onclick="onChangeDifficulty(this)" class="btn difficulty">64</button>
+            <button onclick="onChangeDifficulty(this)" class="btn difficulty">144</button>
+        </div>
+    </div>
+
+    <script src="js/minesweeper.js"></script>
+</body>
+</html>
