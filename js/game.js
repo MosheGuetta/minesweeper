@@ -97,7 +97,7 @@ function renderBoard()
                 <td 
                     class="cell-${i}-${j} ${cellClass}" 
                     onclick="onCellClicked(this, ${i}, ${j})"
-                    oncontextmenu = "onCellMarked(event, this, ${i}, ${j}")>
+                    oncontextmenu="onCellMarked(event, this, ${i}, ${j})">
                 </td>`
         }
         strHTML += '</tr>'
