@@ -11,17 +11,22 @@ body {
 .container {
     text-align: center;
     background-color: #fff;
-    position: absolute;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 
+table {
+    margin: 0 auto;
+    border-spacing: 0;
+}
+
+
 table td {
     width: 30px;
     height: 30px;
-    font-size: 24px;
+    font-size: 18px;
     text-align: center;
     background-color: #5674ba;
     color: white;
@@ -75,6 +80,8 @@ td.selected {
     color: white;
     border: none;
     border-radius: 5px;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 td.shown {
