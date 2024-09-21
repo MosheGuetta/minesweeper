@@ -17,6 +17,7 @@ function placeMines()
     }
 }
 
+
 function setMinesNegsCount()
 {
     for (var i = 0; i < gBoard.length; i++)
@@ -28,6 +29,7 @@ function setMinesNegsCount()
         }
     }
 }
+
 
 function countNegMinesArround(cellI, cellJ)
 {
@@ -41,6 +43,7 @@ function countNegMinesArround(cellI, cellJ)
             if (gBoard[i][j].isMine) mineCount ++
         }
     }
+    
     return mineCount
 }
 

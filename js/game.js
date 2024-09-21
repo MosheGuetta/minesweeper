@@ -31,21 +31,20 @@ let gStartTime // what time the game strats
 function onInit() 
 {
     clearInterval(gTimerInterval)
+    gStartTime = null
 
     var elTimer = document.querySelector('.timer')
     elTimer.innerText = INITIAL_TIMER_TEXT
 
     gGame.isOn = true
-    buildBoard()
+    gGame.shownCount = 0
     gGame.markedCount = 0
+
+    document.querySelector.apply('.restart').classList.add('hidden')
+
+    buildBoard()
     updateBombCounter()
     
-}
-
-function updateBombCounter ()
-{
-    const elBombsCounter = document.querySelector('.bombsCounter')
-    elBombsCounter.innerText = gLevel.MINES - gGame.markedCount
 }
 
 
@@ -75,7 +74,6 @@ function buildBoard()
     setMinesNegsCount()
     renderBoard()
 }
-
 
 
 function renderBoard()
@@ -116,9 +114,10 @@ function onCellClicked(elCell, i, j)
 
     const currCell = gBoard[i][j]
 
+    if(currCell.isShown || currCell.isMarked) return
+
     if (!gStartTime) startTimer()
 
-    if(currCell.isShown || currCell.isMarked) return
 
     if(currCell.isMine)
     {
@@ -127,6 +126,7 @@ function onCellClicked(elCell, i, j)
     }
 
     currCell.isShown = true
+    gGame.shownCount++
 
     elCell.classList.add('shown')
     elCell.innerText = currCell.negMinesCount > 0 ? currCell.negMinesCount : ''
@@ -140,35 +140,7 @@ function onCellClicked(elCell, i, j)
 }
 
 
-function onCellMarked(event, elCell, i, j) 
-{
-    event.preventDefault() // remove the regular right click actionnnnnn
-
-    if (!gGame.isOn) return
-    const currCell = gBoard[i][j]
-
-    if(currCell.isShown) return
-
-    currCell.isMarked = !currCell.isMarked
-
-    if(currCell.isMarked)
-    {
-        elCell.innerText = '🇮🇱'
-        gGame.markedCount ++
-    }
-    else
-    {
-        elCell.innerText = ''
-        gGame.markedCount--
-    }
-
-    updateBombCounter()
-    checkGameOver()
-}
-
-
-
-function showMoreCells(cellI, cellJ)
+function showMoreCells(cellI, cellJ) 
 {
     for (var i = cellI - 1; i <= cellI + 1; i++) 
     {
@@ -179,12 +151,19 @@ function showMoreCells(cellI, cellJ)
             if (i < 0 || j < 0 || i >= gBoard.length || j >= gBoard.length) continue
 
             const currCell = gBoard[i][j]
-
             const elCell = document.querySelector(`.cell-${i}-${j}`)
 
-            if (!currCell.isShown && !currCell.isMine) 
+            if (!currCell.isShown && !currCell.isMine && !currCell.isMarked) 
             {
-                onCellClicked(elCell, i, j)
+                currCell.isShown = true
+                gGame.shownCount++
+                elCell.classList.add('shown')
+                elCell.innerText = currCell.negMinesCount > 0 ? currCell.negMinesCount : ''
+
+                if (currCell.negMinesCount === 0) 
+                {
+                    showMoreCells(i, j)
+                }
             }
         }
     }
@@ -206,6 +185,7 @@ function showMines()
             }
         }
     }
+
     alert('Game over! You hit a mine.')
     gGame.isOn = false
     clearInterval(gTimerInterval)
@@ -214,13 +194,12 @@ function showMines()
 }
 
 
-
 function checkGameOver() 
 {
     let totalCells = gBoard.length * gBoard[0].length
     let nonMineCells = totalCells - gLevel.MINES
 
-    if (gGame.shownCount === nonMineCells) 
+    if (gGame.shownCount === nonMineCells && gGame.markedCount === gLevel.MINES)
     {
         alert('You won!')
         gGame.isOn = false
@@ -230,8 +209,42 @@ function checkGameOver()
 }
 
 
+function onCellMarked(event, elCell, i, j) 
+{
+    event.preventDefault() // remove the regular right click actionnnnnn
 
-function startTimer() {
+    if (!gGame.isOn) return
+    const currCell = gBoard[i][j]
+
+    if(currCell.isShown) return
+
+    currCell.isMarked = !currCell.isMarked
+
+    if(currCell.isMarked)
+    {
+        elCell.innerText = '🚩'
+        gGame.markedCount ++
+    }
+    else
+    {
+        elCell.innerText = ''
+        gGame.markedCount--
+    }
+
+    updateBombCounter()
+    checkGameOver()
+}
+
+
+function updateBombCounter ()
+{
+    const elBombsCounter = document.querySelector('.bombsCounter')
+    elBombsCounter.innerText = gLevel.MINES - gGame.markedCount
+}
+
+
+function startTimer() 
+{
 
     gStartTime = Date.now()
 
@@ -247,26 +260,30 @@ function startTimer() {
 }
 
 
-function formatTime(ms) {
-    var minutes = Math.floor(ms / 60000);
-    var seconds = Math.floor((ms % 60000) / 1000);
+function formatTime(ms) 
+{
+    var minutes = Math.floor(ms / 60000)
+    var seconds = Math.floor((ms % 60000) / 1000)
     var milliseconds = ms % 1000
 
     return `${padTime(minutes)}:${padTime(seconds)}.${padMiliseconds(milliseconds)}`
 }
 
 
-function padTime(val) {
+function padTime(val) 
+{
     return String(val).padStart(2, '0')
 }
 
 
-function padMiliseconds(ms) {
+function padMiliseconds(ms) 
+{
     return String(ms).padStart(3, '0')
 }
 
 
-function resetGame() {
+function resetGame() 
+{
     onInit()
 }
 
@@ -275,11 +292,16 @@ function onChangeDifficulty(elBtn)
 {
     var elTxt = elBtn.innerText
 
-    if (elTxt === 'Easy'){
+    if (elTxt === 'Easy')
+    {
         gBoardSize = 16
-    } else if (elTxt === 'Medium') {
+    } 
+    else if (elTxt === 'Medium') 
+    {
         gBoardSize = 64
-    } else {
+    } 
+    else 
+    {
         gBoardSize = 144
     }
 
