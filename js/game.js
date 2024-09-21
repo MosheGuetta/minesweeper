@@ -109,49 +109,53 @@ function renderBoard()
 
 function onCellClicked(elCell, i, j) 
 {
-    if(!gGame.isOn) return
+    if (!gGame.isOn) return // Stop if the game is over
 
     const currCell = gBoard[i][j]
 
-    if(currCell.isShown || currCell.isMarked) return
+    // If the cell is already shown or marked, do nothing
+    if (currCell.isShown || currCell.isMarked) return
 
+    // Start timer on the first click
     if (!gStartTime) startTimer()
 
-
-    if(currCell.isBomb)
+    // Case 1: If the clicked cell is a bomb, reveal all bombs and end the game
+    if (currCell.isBomb) 
     {
         showBombs()
         return
     }
 
+    // Case 2: Reveal the current cell (even if it's surrounded by bombs)
     currCell.isShown = true
     gGame.shownCount++
-
     elCell.classList.add('shown')
     elCell.innerText = currCell.negBombsCount > 0 ? currCell.negBombsCount : ''
 
-    if(currCell.negBombsCount === 0)
+    // Case 3: If the cell has no neighboring bombs, recursively reveal neighbors
+    if (currCell.negBombsCount === 0) 
     {
-        showMoreCells(i,j)
+        expandShown(i, j) // Recursively reveal neighboring cells
     }
 
+    // Check if the player won the game
     checkGameOver()
 }
 
 
-function showMoreCells(cellI, cellJ) 
+function expandShown(cellI, cellJ) 
 {
     for (var i = cellI - 1; i <= cellI + 1; i++) 
     {
         for (var j = cellJ - 1; j <= cellJ + 1; j++) 
         {
-            if (i === cellI && j === cellJ) continue
-
-            if (i < 0 || j < 0 || i >= gBoard.length || j >= gBoard.length) continue
+            if (i === cellI && j === cellJ) continue // Skip the current cell
+            if (i < 0 || j < 0 || i >= gBoard.length || j >= gBoard[i].length) continue // Bounds check
 
             const currCell = gBoard[i][j]
             const elCell = document.querySelector(`.cell-${i}-${j}`)
 
+            // Only reveal unshown, unmarked, non-bomb cells
             if (!currCell.isShown && !currCell.isBomb && !currCell.isMarked) 
             {
                 currCell.isShown = true
@@ -159,9 +163,10 @@ function showMoreCells(cellI, cellJ)
                 elCell.classList.add('shown')
                 elCell.innerText = currCell.negBombsCount > 0 ? currCell.negBombsCount : ''
 
+                // Recursively expand if the current cell has no neighboring bombs
                 if (currCell.negBombsCount === 0) 
                 {
-                    showMoreCells(i, j)
+                    expandShown(i, j) // Recursion for empty cells
                 }
             }
         }
@@ -202,7 +207,7 @@ function checkGameOver()
     if (gGame.shownCount === nonBombCells) 
     {
         
-        revealAllCells()
+        showAllCells()
 
         setTimeout(() => {
             alert('You won!')
