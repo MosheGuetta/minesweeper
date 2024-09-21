@@ -186,11 +186,12 @@ function showMines()
         }
     }
 
-    alert('Game over! You hit a mine.')
-    gGame.isOn = false
-    clearInterval(gTimerInterval)
-
-    document.querySelector('.restart').classList.remove('hidden')
+    setTimeout(() => {
+        alert('Game over!')
+        gGame.isOn = false
+        clearInterval(gTimerInterval)
+        document.querySelector('.restart').classList.remove('hidden')
+    }, 100)
 }
 
 
@@ -199,14 +200,41 @@ function checkGameOver()
     let totalCells = gBoard.length * gBoard[0].length
     let nonMineCells = totalCells - gLevel.MINES
 
-    if (gGame.shownCount === nonMineCells && gGame.markedCount === gLevel.MINES)
+    if (gGame.shownCount === nonMineCells) 
     {
-        alert('You won!')
-        gGame.isOn = false
-        clearInterval(gTimerInterval)
-        document.querySelector('.restart').classList.remove('hidden')
+        
+        revealAllCells()
+
+        setTimeout(() => {
+            alert('You won!')
+            gGame.isOn = false
+            clearInterval(gTimerInterval)
+            document.querySelector('.restart').classList.remove('hidden')
+        }, 100)
     }
 }
+
+
+
+function showAllCells() 
+{
+    for (var i = 0; i < gBoard.length; i++) 
+    {
+        for (var j = 0; j < gBoard[i].length; j++) 
+        {
+            const currCell = gBoard[i][j]
+
+            if (!currCell.isMine && !currCell.isShown) 
+            {
+                const elCell = document.querySelector(`.cell-${i}-${j}`)
+                currCell.isShown = true
+                elCell.classList.add('shown')
+                elCell.innerText = currCell.negMinesCount > 0 ? currCell.negMinesCount : ''
+            }
+        }
+    }
+}
+
 
 
 function onCellMarked(event, elCell, i, j) 
@@ -292,19 +320,21 @@ function onChangeDifficulty(elBtn)
 {
     var elTxt = elBtn.innerText
 
-    if (elTxt === 'Easy')
+    if (elTxt === 'Easy') 
     {
-        gBoardSize = 16
+        gLevel.SIZE = 4
+        gLevel.MINES = 2
     } 
     else if (elTxt === 'Medium') 
     {
-        gBoardSize = 64
+        gLevel.SIZE = 8
+        gLevel.MINES = 14
     } 
     else 
     {
-        gBoardSize = 144
+        gLevel.SIZE = 12
+        gLevel.MINES = 32
     }
 
     onInit()
 }
-
