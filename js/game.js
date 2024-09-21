@@ -149,7 +149,7 @@ function expandShown(cellI, cellJ)
     {
         for (var j = cellJ - 1; j <= cellJ + 1; j++) 
         {
-            if (i === cellI && j === cellJ) continue // Skip the current cell
+            if (i === cellI && j === cellJ) continue // Skip the original cell
             if (i < 0 || j < 0 || i >= gBoard.length || j >= gBoard[i].length) continue // Bounds check
 
             const currCell = gBoard[i][j]
@@ -163,7 +163,7 @@ function expandShown(cellI, cellJ)
                 elCell.classList.add('shown')
                 elCell.innerText = currCell.negBombsCount > 0 ? currCell.negBombsCount : ''
 
-                // Recursively expand if the current cell has no neighboring bombs
+                // Recursively expand only if the current cell has no neighboring bombs
                 if (currCell.negBombsCount === 0) 
                 {
                     expandShown(i, j) // Recursion for empty cells
@@ -172,6 +172,7 @@ function expandShown(cellI, cellJ)
         }
     }
 }
+
 
 
 function showBombs() 

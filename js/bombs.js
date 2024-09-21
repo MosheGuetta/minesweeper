@@ -25,25 +25,25 @@ function setBombsNegsCount()
         for (var j = 0; j < gBoard.length; j++)
         {
             let currCell = gBoard[i][j]
-            currCell.negbombsCount = countNegbombsArround(i,j)
+            currCell.negBombsCount = countNegBombsArround(i,j)
         }
     }
 }
 
 
-function countNegbombsArround(cellI, cellJ)
+function countNegBombsArround(cellI, cellJ) 
 {
     let bombCount = 0
-    for(var i = cellI - 1; i<cellI + 1; i++)
-    {
-        for(var j = cellJ - 1; j<= cellJ + 1; j++)
+    for (var i = cellI - 1; i <= cellI + 1; i++) 
+    {  
+        for (var j = cellJ - 1; j <= cellJ + 1; j++) 
         {
-            if(i === cellI && j === cellJ) continue
-            if (i < 0 || j < 0 || i >= gBoard.length || j>= gBoard.length) continue
-            if (gBoard[i][j].isbomb) bombCount ++
+            if (i === cellI && j === cellJ) continue // Skip the current cell
+            if (i < 0 || j < 0 || i >= gBoard.length || j >= gBoard.length) continue // Bounds check
+            if (gBoard[i][j].isBomb) bombCount++ // Check for bombs
         }
     }
-    
     return bombCount
 }
+
 
