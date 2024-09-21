@@ -198,7 +198,6 @@ function checkGameOver()
 }
 
 
-
 function showAllCells() 
 {
     for (var i = 0; i < gBoard.length; i++) 
@@ -217,7 +216,6 @@ function showAllCells()
         }
     }
 }
-
 
 
 function onCellMarked(event, elCell, i, j) 
@@ -287,12 +285,6 @@ function formatTime(ms)
 function padTime(val) 
 {
     return String(val).padStart(2, '0')
-}
-
-
-function padMiliseconds(ms) 
-{
-    return String(ms).padStart(3, '0')
 }
 
 
