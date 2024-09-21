@@ -1,21 +1,28 @@
 'use strict'
 
-function placeBombs()
+function placeBombs(firstClickI, firstClickJ) 
 {
     let bombsCount = gLevel.BOMBS
 
-    while (bombsCount > 0)
+    while (bombsCount > 0) 
     {
         const i = getRandomInt(0, gLevel.SIZE)
         const j = getRandomInt(0, gLevel.SIZE)
 
-        if(!gBoard[i][j].isBomb)
+        // Skip placing bombs on the first clicked cell and its neighbors
+        if (Math.abs(i - firstClickI) <= 1 && Math.abs(j - firstClickJ) <= 1) continue
+
+        if (!gBoard[i][j].isBomb) 
         {
             gBoard[i][j].isBomb = true
-            bombsCount --
+            bombsCount--
         }
     }
+
+    // After placing bombs, set neighboring bomb counts
+    setBombsNegsCount()
 }
+
 
 
 function setBombsNegsCount()

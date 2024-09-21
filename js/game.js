@@ -116,8 +116,12 @@ function onCellClicked(elCell, i, j)
     // If the cell is already shown or marked, do nothing
     if (currCell.isShown || currCell.isMarked) return
 
-    // Start timer on the first click
-    if (!gStartTime) startTimer()
+    // First click: Place bombs and start the timer
+    if (!gStartTime) 
+    {
+        startTimer()
+        placeBombs(i, j) // Place bombs after the first click, excluding this cell
+    }
 
     // Case 1: If the clicked cell is a bomb, reveal all bombs and end the game
     if (currCell.isBomb) 
@@ -126,7 +130,7 @@ function onCellClicked(elCell, i, j)
         return
     }
 
-    // Case 2: Reveal the current cell (even if it's surrounded by bombs)
+    // Case 2: Reveal the current cell
     currCell.isShown = true
     gGame.shownCount++
     elCell.classList.add('shown')
@@ -141,6 +145,7 @@ function onCellClicked(elCell, i, j)
     // Check if the player won the game
     checkGameOver()
 }
+
 
 
 function expandShown(cellI, cellJ) 
