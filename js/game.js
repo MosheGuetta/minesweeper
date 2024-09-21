@@ -37,7 +37,15 @@ function onInit()
 
     gGame.isOn = true
     buildBoard()
+    gGame.markedCount = 0
+    updateBombCounter()
     
+}
+
+function updateBombCounter ()
+{
+    const elBombsCounter = document.querySelector('.bombsCounter')
+    elBombsCounter.innerText = gLevel.MINES - gGame.markedCount
 }
 
 
@@ -103,7 +111,11 @@ function renderBoard()
 
 function onCellClicked(elCell, i, j) 
 {
+    if(!gGame.isOn) return
+
     const currCell = gBoard[i][j]
+
+    if (!gStartTime) startTimer()
 
     if(currCell.isShown || currCell.isMarked) return
 
