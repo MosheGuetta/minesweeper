@@ -179,6 +179,8 @@ function showMines()
     alert('Game over! You hit a mine.')
     gGame.isOn = false
     clearInterval(gTimerInterval)
+
+    document.querySelector('.restart').classList.remove('hidden')
 }
 
 
@@ -193,6 +195,7 @@ function checkGameOver()
         alert('You won!')
         gGame.isOn = false
         clearInterval(gTimerInterval)
+        document.querySelector('.restart').classList.remove('hidden')
     }
 }
 

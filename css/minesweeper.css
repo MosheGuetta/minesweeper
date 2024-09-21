@@ -87,3 +87,7 @@ td.shown {
     justify-content: space-between;
     margin-bottom: 10px;
 }
+
+.hidden{
+    display: none;
+}
