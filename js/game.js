@@ -69,8 +69,6 @@ function buildBoard()
         }
     }
 
-    placeBombs()
-    setBombsNegsCount()
     renderBoard()
 }
 
