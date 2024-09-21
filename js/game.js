@@ -2,7 +2,7 @@
 
 const TIMER_INTERVAL = 31 // how ofen the timer updataes. with prime number 
 //                              we can see all of the milseconds
-const INITIAL_TIMER_TEXT = '00:00' // the way the timer will look like
+const INITIAL_TIMER_TEXT = '00:00 ' // the way the timer will look like
 
 const EMPTY = ''
 const BOMB = '💣'

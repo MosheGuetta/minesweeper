@@ -52,7 +52,10 @@ td.selected {
 
 .timer {
     font-family: monospace;
+    white-space: nowrap;               
+    width: 100px;                      
 }
+
 .difficulty-container {
     margin-top: 20px;
 }
@@ -92,7 +95,13 @@ td.shown {
 .statusBar{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
+}
+
+.statusBar span {
+    flex: 1;
+    text-align: center;
 }
 
 .hidden{
