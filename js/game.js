@@ -153,7 +153,8 @@ function expandShown(cellI, cellJ)
         for (var j = cellJ - 1; j <= cellJ + 1; j++) 
         {
             if (i === cellI && j === cellJ) continue // Skip the original cell
-            if (i < 0 || j < 0 || i >= gBoard.length || j >= gBoard[i].length) continue // Bounds check
+
+            if (i < 0 || j < 0 || i >= gBoard.length || j >= gBoard[i].length) continue // check borders
 
             const currCell = gBoard[i][j]
             const elCell = document.querySelector(`.cell-${i}-${j}`)
@@ -174,31 +175,6 @@ function expandShown(cellI, cellJ)
             }
         }
     }
-}
-
-
-function showBombs() 
-{
-    for (var i = 0; i < gBoard.length; i++) 
-    {
-        for (var j = 0; j < gBoard[i].length; j++) 
-        {
-            let currCell = gBoard[i][j]
-            if (currCell.isBomb) 
-            {
-                const elCell = document.querySelector(`.cell-${i}-${j}`)
-                elCell.classList.add('shown')
-                elCell.innerText = BOMB
-            }
-        }
-    }
-
-    setTimeout(() => {
-        alert('Game over!')
-        gGame.isOn = false
-        clearInterval(gTimerInterval)
-        document.querySelector('.restart').classList.remove('hidden')
-    }, 100)
 }
 
 
