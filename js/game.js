@@ -98,7 +98,8 @@ function renderBoard()
             strHTML += ` 
                 <td 
                     class="cell-${i}-${j} ${cellClass}" 
-                    onclick="onCellClicked(this, ${i}, ${j})">
+                    onclick="onCellClicked(this, ${i}, ${j})"
+                    oncontextmenu = "onCellMarked(event, this, ${i}, ${j}")>
                 </td>`
         }
         strHTML += '</tr>'
@@ -137,6 +138,35 @@ function onCellClicked(elCell, i, j)
 
     checkGameOver()
 }
+
+
+function onCellMarked(event, elCell, i, j) 
+{
+    event.preventDefault() // remove the regular right click actionnnnnn
+
+    if (!gGame.isOn) return
+    const currCell = gBoard[i][j]
+
+    if(currCell.isShown) return
+
+    currCell.isMarked = !currCell.isMarked
+
+    if(currCell.isMarked)
+    {
+        elCell.innerText = '🇮🇱'
+        gGame.markedCount ++
+    }
+    else
+    {
+        elCell.innerText = ''
+        gGame.markedCount--
+    }
+
+    updateBombCounter()
+    checkGameOver()
+}
+
+
 
 function showMoreCells(cellI, cellJ)
 {
