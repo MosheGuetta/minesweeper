@@ -1,57 +1,49 @@
 'use strict'
 
-function placeMines() 
+function placeBombs()
 {
-    let mineCount = gLevel.MINES
-    const totalCells = gLevel.SIZE * gLevel.SIZE
+    let bombsCount = gLevel.BOMBS
 
-    if (gLevel.MINES >= totalCells) 
-    {
-        console.error("Too many bombs for the board size!")
-        return
-    }
-
-    while (mineCount > 0) 
+    while (bombsCount > 0)
     {
         const i = getRandomInt(0, gLevel.SIZE)
         const j = getRandomInt(0, gLevel.SIZE)
 
-        if (!gBoard[i][j].isMine) 
+        if(!gBoard[i][j].isBomb)
         {
-            gBoard[i][j].isMine = true
-            mineCount--
+            gBoard[i][j].isBomb = true
+            bombsCount --
         }
     }
 }
 
 
-
-function setMinesNegsCount()
+function setBombsNegsCount()
 {
     for (var i = 0; i < gBoard.length; i++)
     {
         for (var j = 0; j < gBoard.length; j++)
         {
             let currCell = gBoard[i][j]
-            currCell.negMinesCount = countNegMinesArround(i,j)
+            currCell.negbombsCount = countNegbombsArround(i,j)
         }
     }
 }
 
 
-function countNegMinesArround(cellI, cellJ)
+function countNegbombsArround(cellI, cellJ)
 {
-    let mineCount = 0
+    let bombCount = 0
     for(var i = cellI - 1; i<cellI + 1; i++)
     {
         for(var j = cellJ - 1; j<= cellJ + 1; j++)
         {
             if(i === cellI && j === cellJ) continue
             if (i < 0 || j < 0 || i >= gBoard.length || j>= gBoard.length) continue
-            if (gBoard[i][j].isMine) mineCount ++
+            if (gBoard[i][j].isbomb) bombCount ++
         }
     }
-
-    return mineCount
+    
+    return bombCount
 }
 

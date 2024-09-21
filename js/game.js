@@ -7,11 +7,10 @@ const INITIAL_TIMER_TEXT = '00:00.000' // the way the timer will look like
 const EMPTY = ''
 const BOMB = '💣'
 
-let gBoardSize = 16
 let gLevel = 
 {
     SIZE: 4,
-    MINES: 2
+    BOMBS: 2
 }
 
 let gGame = 
@@ -50,7 +49,7 @@ function onInit()
 
 function buildBoard() 
 {
-    var boardSize = Math.sqrt(gBoardSize)
+    var boardSize = gLevel.SIZE
     gBoard = []
 
     for (var i = 0; i < boardSize; i++)
@@ -60,9 +59,9 @@ function buildBoard()
         {
             let currCell = 
             {
-                negMinesCount: 0,
+                negBombsCount: 0,
                 isShown: false,
-                isMine: false,
+                isBomb: false,
                 isMarked: false,
             }
 
@@ -70,8 +69,8 @@ function buildBoard()
         }
     }
 
-    placeMines()
-    setMinesNegsCount()
+    placeBombs()
+    setBombsNegsCount()
     renderBoard()
 }
 
@@ -119,9 +118,9 @@ function onCellClicked(elCell, i, j)
     if (!gStartTime) startTimer()
 
 
-    if(currCell.isMine)
+    if(currCell.isBomb)
     {
-        showMines()
+        showBombs()
         return
     }
 
@@ -129,9 +128,9 @@ function onCellClicked(elCell, i, j)
     gGame.shownCount++
 
     elCell.classList.add('shown')
-    elCell.innerText = currCell.negMinesCount > 0 ? currCell.negMinesCount : ''
+    elCell.innerText = currCell.negBombsCount > 0 ? currCell.negBombsCount : ''
 
-    if(currCell.negMinesCount === 0)
+    if(currCell.negBombsCount === 0)
     {
         showMoreCells(i,j)
     }
@@ -153,14 +152,14 @@ function showMoreCells(cellI, cellJ)
             const currCell = gBoard[i][j]
             const elCell = document.querySelector(`.cell-${i}-${j}`)
 
-            if (!currCell.isShown && !currCell.isMine && !currCell.isMarked) 
+            if (!currCell.isShown && !currCell.isBomb && !currCell.isMarked) 
             {
                 currCell.isShown = true
                 gGame.shownCount++
                 elCell.classList.add('shown')
-                elCell.innerText = currCell.negMinesCount > 0 ? currCell.negMinesCount : ''
+                elCell.innerText = currCell.negBombsCount > 0 ? currCell.negBombsCount : ''
 
-                if (currCell.negMinesCount === 0) 
+                if (currCell.negBombsCount === 0) 
                 {
                     showMoreCells(i, j)
                 }
@@ -170,14 +169,14 @@ function showMoreCells(cellI, cellJ)
 }
 
 
-function showMines() 
+function showBombs() 
 {
     for (var i = 0; i < gBoard.length; i++) 
     {
         for (var j = 0; j < gBoard[i].length; j++) 
         {
             let currCell = gBoard[i][j]
-            if (currCell.isMine) 
+            if (currCell.isBomb) 
             {
                 const elCell = document.querySelector(`.cell-${i}-${j}`)
                 elCell.classList.add('shown')
@@ -198,9 +197,9 @@ function showMines()
 function checkGameOver() 
 {
     let totalCells = gBoard.length * gBoard[0].length
-    let nonMineCells = totalCells - gLevel.MINES
+    let nonBombCells = totalCells - gLevel.BOMBS
 
-    if (gGame.shownCount === nonMineCells) 
+    if (gGame.shownCount === nonBombCells) 
     {
         
         revealAllCells()
@@ -224,12 +223,12 @@ function showAllCells()
         {
             const currCell = gBoard[i][j]
 
-            if (!currCell.isMine && !currCell.isShown) 
+            if (!currCell.isBomb && !currCell.isShown) 
             {
                 const elCell = document.querySelector(`.cell-${i}-${j}`)
                 currCell.isShown = true
                 elCell.classList.add('shown')
-                elCell.innerText = currCell.negMinesCount > 0 ? currCell.negMinesCount : ''
+                elCell.innerText = currCell.negBombsCount > 0 ? currCell.negBombsCount : ''
             }
         }
     }
@@ -267,7 +266,7 @@ function onCellMarked(event, elCell, i, j)
 function updateBombCounter ()
 {
     const elBombsCounter = document.querySelector('.bombsCounter')
-    elBombsCounter.innerText = gLevel.MINES - gGame.markedCount
+    elBombsCounter.innerText = gLevel.BOMBS - gGame.markedCount
 }
 
 
@@ -323,17 +322,17 @@ function onChangeDifficulty(elBtn)
     if (elTxt === 'Easy') 
     {
         gLevel.SIZE = 4
-        gLevel.MINES = 2
+        gLevel.BOMBS = 2
     } 
     else if (elTxt === 'Medium') 
     {
         gLevel.SIZE = 8
-        gLevel.MINES = 14
+        gLevel.BOMBS = 14
     } 
     else 
     {
         gLevel.SIZE = 12
-        gLevel.MINES = 32
+        gLevel.BOMBS = 32
     }
 
     onInit()
