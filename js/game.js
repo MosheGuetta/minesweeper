@@ -16,8 +16,8 @@ let gLevel =
 let gGame = 
 {
     isOn: false,
-    shownCount: 0,
-    markedCount: 0,
+    shownCount: 0, // cell that the player clicked on and were not bombs
+    markedCount: 0, // marked with flags
     timePassed: 0,
 }
 
@@ -30,14 +30,14 @@ let gStartTime // what time the game strats
 function onInit() 
 {
     clearInterval(gTimerInterval)
-    gStartTime = null
+    gStartTime = null // reset the time
 
     var elTimer = document.querySelector('.timer')
     elTimer.innerText = INITIAL_TIMER_TEXT
 
     gGame.isOn = true
-    gGame.shownCount = 0
-    gGame.markedCount = 0
+    gGame.shownCount = 0 // reset the cells the player clicked on
+    gGame.markedCount = 0 // reset the cells the player set flag
 
     document.querySelector('.restart').classList.add('hidden')
 
@@ -57,12 +57,12 @@ function buildBoard()
         gBoard[i] = []
         for (var j = 0; j < boardSize; j++)
         {
-            let currCell = 
+            let currCell = // each cell in the board will have:
             {
-                negBombsCount: 0,
-                isShown: false,
-                isBomb: false,
-                isMarked: false,
+                negBombsCount: 0, // negs that are bombs
+                isShown: false, // if the cell was clicked or not
+                isBomb: false, // if the cell is a bombs
+                isMarked: false, // if the cell has a flag
             }
 
             gBoard[i][j] = currCell
@@ -87,7 +87,7 @@ function renderBoard()
 
             if(gBoard[i][j].isShown)
             {
-                cellClass = "shown"
+                cellClass = "shown" // if the cell was clicked we had the shown class
             }
 
             strHTML += ` 
@@ -122,6 +122,7 @@ function onCellClicked(elCell, i, j)
     }
 
     // Case 1: If the clicked cell is a bomb, reveal all bombs and end the game
+    // TO DO: ADD LIVES
     if (currCell.isBomb) 
     {
         showBombs()
@@ -143,7 +144,6 @@ function onCellClicked(elCell, i, j)
     // Check if the player won the game
     checkGameOver()
 }
-
 
 
 function expandShown(cellI, cellJ) 
@@ -175,7 +175,6 @@ function expandShown(cellI, cellJ)
         }
     }
 }
-
 
 
 function showBombs() 
