@@ -1,21 +1,29 @@
 'use strict'
 
-function placeMines()
+function placeMines() 
 {
     let mineCount = gLevel.MINES
+    const totalCells = gLevel.SIZE * gLevel.SIZE
 
-    while (mineCount > 0)
+    if (gLevel.MINES >= totalCells) 
     {
-        const i = getRandomInt(0, Math.sqrt(gBoardSize))
-        const j = getRandomInt(0, Math.sqrt(gBoardSize))
+        console.error("Too many bombs for the board size!")
+        return
+    }
 
-        if(!gBoard[i][j].isMine)
+    while (mineCount > 0) 
+    {
+        const i = getRandomInt(0, gLevel.SIZE)
+        const j = getRandomInt(0, gLevel.SIZE)
+
+        if (!gBoard[i][j].isMine) 
         {
             gBoard[i][j].isMine = true
-            mineCount --
+            mineCount--
         }
     }
 }
+
 
 
 function setMinesNegsCount()
@@ -43,7 +51,7 @@ function countNegMinesArround(cellI, cellJ)
             if (gBoard[i][j].isMine) mineCount ++
         }
     }
-    
+
     return mineCount
 }
 
