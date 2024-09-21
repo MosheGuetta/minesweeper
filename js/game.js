@@ -40,7 +40,7 @@ function onInit()
     gGame.shownCount = 0
     gGame.markedCount = 0
 
-    document.querySelector.apply('.restart').classList.add('hidden')
+    document.querySelector('.restart').classList.add('hidden')
 
     buildBoard()
     updateBombCounter()
