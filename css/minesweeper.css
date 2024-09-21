@@ -76,3 +76,14 @@ td.selected {
     border: none;
     border-radius: 5px;
 }
+
+td.shown {
+    background-color: rgb(151, 151, 2);
+    color: black; 
+}
+
+.statusBar{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
