@@ -9,7 +9,7 @@ function placeBombs(firstClickI, firstClickJ)
         const i = getRandomInt(0, gLevel.SIZE)
         const j = getRandomInt(0, gLevel.SIZE)
 
-        // Skip placing bombs on the first clicked cell and its neighbors
+        // check to make sure the first clicked sell is not having a bombs in it
         if (Math.abs(i - firstClickI) <= 1 && Math.abs(j - firstClickJ) <= 1) continue
 
         if (!gBoard[i][j].isBomb) 
@@ -19,12 +19,12 @@ function placeBombs(firstClickI, firstClickJ)
         }
     }
 
-    // After placing bombs, set neighboring bomb counts
     setBombsNegsCount()
 }
 
 
-
+// runs on all the board and update each cell how many bombs arround it 
+// using countNegBombsArround
 function setBombsNegsCount()
 {
     for (var i = 0; i < gBoard.length; i++)
@@ -37,7 +37,7 @@ function setBombsNegsCount()
     }
 }
 
-
+// counting the number of bombs serrounding each cell
 function countNegBombsArround(cellI, cellJ) 
 {
     let bombCount = 0
