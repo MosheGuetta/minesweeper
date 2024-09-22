@@ -18,6 +18,7 @@ let gGame =
     shownCount: 0, // cell that the player clicked on and were not bombs
     markedCount: 0, // marked with flags
     timePassed: 0,
+    lives: 3
 }
 
 let gBoard = []
@@ -42,6 +43,7 @@ function onInit()
 
     buildBoard()
     updateBombCounter()
+    updateLives()
     
 }
 
@@ -124,8 +126,20 @@ function onCellClicked(elCell, i, j)
     // TO DO: ADD LIVES
     if (currCell.isBomb) 
     {
-        showBombs()
-        return
+        gGame.lives--
+        updateLives()
+
+        if (gGame.lives === 0)
+        {
+            showBombs()
+            return
+        }
+        else
+        {
+            alert(`You hit a bomb, you have ${gGame.lives} lives`)
+            return
+        }
+        
     }
 
     // Case 2: Reveal the current cell
@@ -194,6 +208,20 @@ function checkGameOver()
             document.querySelector('.restart').classList.remove('hidden')
         }, 100)
     }
+}
+
+
+function updateLives()
+{
+    const elLives = document.querySelector('.lives')
+    let livesHTML = ''
+
+    for (var i = 0; i <gGame.lives; i++)
+    {
+        livesHTML += '😄'
+    }
+
+    elLives.innerHTML = livesHTML
 }
 
 

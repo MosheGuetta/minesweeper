@@ -107,3 +107,9 @@ td.shown {
 .hidden{
     display: none;
 }
+
+.lives {
+    font-size: 20px;
+    color: #ff5722;
+    display: inline-block;
+}
