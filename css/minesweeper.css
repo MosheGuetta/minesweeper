@@ -108,8 +108,11 @@ td.shown {
     display: none;
 }
 
+.lives-display {
+    margin-bottom: 10px;
+}
+
 .lives {
     font-size: 20px;
-    color: #ff5722;
-    display: inline-block;
+    color: green;
 }

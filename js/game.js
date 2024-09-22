@@ -127,7 +127,13 @@ function onCellClicked(elCell, i, j)
     if (currCell.isBomb) 
     {
         gGame.lives--
+        gLevel.BOMBS--
         updateLives()
+        updateBombCounter()
+
+        currCell.isShown = true
+        elCell.classList.add('shown')
+        elCell.innerText = BOMB
 
         if (gGame.lives === 0)
         {
@@ -327,17 +333,21 @@ function onChangeDifficulty(elBtn)
     {
         gLevel.SIZE = 4
         gLevel.BOMBS = 2
+        gGame.lives = 1
     } 
     else if (elTxt === 'Medium') 
     {
         gLevel.SIZE = 8
         gLevel.BOMBS = 14
+        gGame.lives = 2
     } 
     else 
     {
         gLevel.SIZE = 12
         gLevel.BOMBS = 32
+        gGame.lives = 3
     }
 
+    updateLives()
     onInit()
 }
