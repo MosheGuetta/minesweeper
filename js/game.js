@@ -18,7 +18,7 @@ let gGame =
     shownCount: 0, // cell that the player clicked on and were not bombs
     markedCount: 0, // marked with flags
     timePassed: 0,
-    lives: 3
+    lives: 1
 }
 
 let gBoard = []
