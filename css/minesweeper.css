@@ -106,6 +106,7 @@ td.shown {
 
 .hints {
     font-size: 40px;
+    cursor: pointer;
 }
 
 .used-hint {
