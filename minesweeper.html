@@ -16,13 +16,15 @@
                 <span class="bombsCounter"></span>
             </span>
 
+            <button class="btn restart" onclick="resetGame()">😃</button>
+
             <span>Lives:
                 <span class="lives"></span>
             </span>
 
             <span>
                 Time: 
-                <span class="timer">00:00 </span>
+                <span class="timer">000 </span>
             </span>
         </div>
 
@@ -30,12 +32,10 @@
             <table></table>
         </div>
 
-        <div>
-            <button class="btn restart hidden" onclick="resetGame()">Restart</button>
-        </div>
+        <h4>Hints:</h4>
+        <div class="hints"></div>
 
         <div class="difficulty-container">
-            <h4>Difficulty</h4>
             <button onclick="onChangeDifficulty(this)" class="btn difficulty">Easy</button>
             <button onclick="onChangeDifficulty(this)" class="btn difficulty">Medium</button>
             <button onclick="onChangeDifficulty(this)" class="btn difficulty">Hard</button>

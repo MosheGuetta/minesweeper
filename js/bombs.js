@@ -19,26 +19,26 @@ function placeBombs(firstClickI, firstClickJ)
         }
     }
 
-    setBombsNegsCount()
+    setMinesNegsCount()
 }
 
 
 // runs on all the board and update each cell how many bombs arround it 
 // using countNegBombsArround
-function setBombsNegsCount()
+function setMinesNegsCount()
 {
     for (var i = 0; i < gBoard.length; i++)
     {
         for (var j = 0; j < gBoard.length; j++)
         {
             let currCell = gBoard[i][j]
-            currCell.negBombsCount = countNegBombsArround(i,j)
+            currCell.negBombsCount = countNegMinesArround(i,j)
         }
     }
 }
 
 // counting the number of bombs serrounding each cell
-function countNegBombsArround(cellI, cellJ) 
+function countNegMinesArround(cellI, cellJ) 
 {
     let bombCount = 0
     for (var i = cellI - 1; i <= cellI + 1; i++) 
@@ -70,10 +70,11 @@ function showBombs()
         }
     }
 
+    document.querySelector('.restart').innerText = '🤯'
     setTimeout(() => {
+        
         alert('Game over!')
         gGame.isOn = false
         clearInterval(gTimerInterval)
-        document.querySelector('.restart').classList.remove('hidden')
     }, 100)
 }

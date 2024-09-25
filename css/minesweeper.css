@@ -11,9 +11,11 @@ body {
 .container {
     text-align: center;
     background-color: #fff;
-    padding: 20px;
+    padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    height: auto;
 }
 
 
@@ -26,7 +28,7 @@ table {
 table td {
     width: 30px;
     height: 30px;
-    font-size: 18px;
+    font-size: 14px;
     text-align: center;
     background-color: #5674ba;
     color: white;
@@ -34,21 +36,6 @@ table td {
     cursor: pointer;
 }
 
-.btn-num {
-    background-color: lightgray;
-}
-
-table td.correct {
-    background-color: #66bb6a;
-}
-
-table td.wrong {
-    background-color: #e53935;
-}
-
-td.selected {
-    background-color: lightsalmon;
-}
 
 .timer {
     font-family: monospace;
@@ -68,15 +55,9 @@ td.selected {
     padding: 10px 15px;
     font-size: 18px;
     cursor: pointer;
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
-.btn.reset {
-    background-color: #ff5722;
-    color: white;
-    border: none;
-    border-radius: 5px;
-}
 
 .btn.difficulty {
     background-color: #2196f3;
@@ -97,6 +78,15 @@ td.shown {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.statusBar .restart {
+    font-size: 24px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
 }
 
 .statusBar span {
@@ -104,15 +94,21 @@ td.shown {
     text-align: center;
 }
 
-.hidden{
-    display: none;
-}
 
 .lives-display {
     margin-bottom: 10px;
 }
 
 .lives {
+    display: inline-block;
     font-size: 20px;
-    color: green;
+}
+
+.hints {
+    font-size: 40px;
+}
+
+.used-hint {
+    opacity: 0.6;
+    pointer-events: none;
 }
