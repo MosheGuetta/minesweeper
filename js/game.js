@@ -30,13 +30,6 @@ let gBombsCount
 let gTimerInterval // holds the interval
 let gStartTime; // what time the game strats
 
-let gScores = {
-  Easy: JSON.parse(localStorage.getItem('scoreEasy')) || [],
-  Medium: JSON.parse(localStorage.getItem('scoreMedium')) || [],
-  Hard: JSON.parse(localStorage.getItem('scoreHard')) || []
-}
-
-
 function onInit() {
   clearInterval(gTimerInterval);
   gStartTime = null; // reset the time
@@ -56,66 +49,34 @@ function onInit() {
   updateBombCounter();
   updateLives();
   updateHints();
-  updateScoreTable(); 
+  updateScoreTable();
+  initSafeClick() 
 }
 
-
-function buildBoard() {
-  var boardSize = gLevel.SIZE
-  gBoard = []
-
-  for (var i = 0; i < boardSize; i++) {
-    gBoard[i] = []
-    for (var j = 0; j < boardSize; j++) {
-      let currCell =
-        // each cell in the board will have:
-        {
-          minesAroundCount: 0, // negs that are bombs
-          isShown: false, // if the cell was clicked or not
-          isBomb: false, // if the cell is a bombs
-          isMarked: false, // if the cell has a flag
-        };
-
-      gBoard[i][j] = currCell
-    }
-  }
-
-  renderBoard()
-}
-
-function renderBoard() {
-  var strHTML = "<table>"
-
-  for (var i = 0; i < gBoard.length; i++) {
-    strHTML += "<tr>"
-
-    for (var j = 0; j < gBoard.length; j++) {
-      let cellClass = ""
-
-      if (gBoard[i][j].isShown) {
-        cellClass = "shown" // if the cell was clicked we had the shown class
-      }
-
-      strHTML += ` 
-                <td 
-                    class="cell-${i}-${j} ${cellClass}" 
-                    onclick="onCellClicked(this, ${i}, ${j})"
-                    oncontextmenu="onCellMarked(event, this, ${i}, ${j})">
-                </td>`
-    }
-    strHTML += "</tr>"
-  }
-
-  strHTML += "</table>"
-  document.querySelector(".card-game").innerHTML = strHTML
-}
 
 function onCellClicked(elCell, i, j) {
-  if (!gGame.isOn) return;
+  if (!gGame.isOn && !gManualMode) return;
 
   const currCell = gBoard[i][j];
+
+  // If the cell is already shown or marked, do nothing
   if (currCell.isShown || currCell.isMarked) return;
 
+  // Manual Mode: Place bombs manually
+  if (gManualMode) {
+      if (!currCell.isBomb) {
+          currCell.isBomb = true;
+          elCell.innerText = BOMB;
+          gManualBombsPlaced++;
+          gLevel.BOMBS++;
+          updateBombCounter();
+      } else {
+          alert("This cell already has a bomb.");
+      }
+      return;
+  }
+
+  // Safe Click logic
   if (gGame.isHintActive) {
       showCellForSecond(i, j);
       gGame.isHintActive = false;
@@ -124,13 +85,16 @@ function onCellClicked(elCell, i, j) {
       return;
   }
 
+  // First Click Logic
   if (!gStartTime) {
       startTimer();
       placeBombs(i, j); // Place bombs after the first click
   }
 
+  // If clicked on a bomb, lose a life
   if (currCell.isBomb) {
       gGame.lives--;
+      gLevel.BOMBS--
       updateLives();
       updateBombCounter();
 
@@ -139,23 +103,28 @@ function onCellClicked(elCell, i, j) {
       elCell.innerText = BOMB;
 
       if (gGame.lives === 0) {
-          checkGameOver(true); // Lose the game
-          return;
+          alert('You touched a bomb. You have no lives left!');
+          showBombs();
+          checkGameOver(true);
+      } else {
+          alert(`You touched a bomb. You have ${gGame.lives} lives left.`);
       }
       return;
   }
 
+  // Reveal Cell
   currCell.isShown = true;
   gGame.shownCount++;
-  gGame.score += 10; // Each revealed cell gives 10 points
+  gGame.score += 10;
   elCell.classList.add("shown");
   elCell.innerText = currCell.negBombsCount > 0 ? currCell.negBombsCount : "";
 
+  // Expand if no bombs around
   if (currCell.negBombsCount === 0) {
       expandShown(i, j);
   }
 
-  checkGameOver(); // Check if the game is won
+  checkGameOver();
 }
 
 
@@ -185,42 +154,6 @@ function expandShown(cellI, cellJ) {
       }
     }
   }
-}
-
-function showCellForSecond(cellI, cellJ) {
-  const cellsToShow = []
-
-  for (var i = cellI - 1; i <= cellI + 1; i++) {
-    for (var j = cellJ - 1; j <= cellJ + 1; j++) {
-      if (i < 0 || j < 0 || i >= gBoard.length || j >= gBoard.length) continue; // out of borders
-      const currCell = gBoard[i][j]
-
-      if (!currCell.isShown) {
-        cellsToShow.push({
-          cell: currCell,
-          elCell: document.querySelector(`.cell-${i}-${j}`),
-        })
-        currCell.isShown = true
-        const elCell = document.querySelector(`.cell-${i}-${j}`)
-        elCell.classList.add("shown")
-        elCell.innerText = currCell.isBomb 
-          ? BOMB
-          : currCell.negBombsCount > 0
-          ? currCell.negBombsCount
-          : ""
-      }
-    }
-  }
-
-  setTimeout(() => {
-    cellsToShow.forEach(({ cell, elCell }) => {
-      cell.isShown = false
-      elCell.classList.remove("shown")
-      elCell.innerText = ""
-    });
-
-    gGame.isHintActive = false
-  }, 1000)
 }
 
 
@@ -272,46 +205,6 @@ function checkGameOver(isLost = false) {
 }
 
 
-function updateLives() {
-  const elLives = document.querySelector(".lives")
-  let livesHTML = ""
-
-  for (var i = 0; i < gGame.lives; i++) {
-    livesHTML += "💛"
-  }
-
-  elLives.innerHTML = livesHTML
-}
-
-
-function updateHints() {
-  const elHints = document.querySelector(".hints")
-  let hintsHTML = ""
-
-  for (let i = 0; i < gGame.numOfHints; i++) {
-    if (i < gGame.usedHints) {
-      // Render used hints
-      hintsHTML += `<span class="hint used-hint">${USED_HINT}</span> `
-    } else {
-      // Render unused hints
-      hintsHTML += `<span class="hint" onclick="activateHint(this)">${REGULAR_HINT}</span> `
-    }
-  }
-
-  elHints.innerHTML = hintsHTML
-}
-
-
-function activateHint(elHint) {
-  if (!gGame.isHintActive && gGame.numOfHints > gGame.usedHints) {
-    elHint.innerText = USED_HINT
-    elHint.classList.add("used-hint")
-    elHint.onclick = null
-    gGame.usedHints++
-    gGame.isHintActive = true
-  }
-}
-
 function showAllCells() {
   for (var i = 0; i < gBoard.length; i++) {
     for (var j = 0; j < gBoard[i].length; j++) {
@@ -329,77 +222,6 @@ function showAllCells() {
 }
 
 
-function onCellMarked(event, elCell, i, j) {
-  event.preventDefault() // remove the regular right click actionnnnnn
-
-  if (!gGame.isOn) return
-  const currCell = gBoard[i][j]
-
-  if (currCell.isShown) return
-
-  currCell.isMarked = !currCell.isMarked
-
-  if (currCell.isMarked) {
-    elCell.innerText = "🚩"
-    gGame.markedCount++
-  } else {
-    elCell.innerText = ""
-    gGame.markedCount--
-  }
-
-  updateBombCounter()
-  checkGameOver()
-}
-
-
-function updateBombCounter() {
-  const elBombsCounter = document.querySelector(".bombsCounter")
-  elBombsCounter.innerText = gLevel.BOMBS - gGame.markedCount
-}
-
-function startTimer() {
-  gStartTime = Date.now()
-
-  gTimerInterval = setInterval(() => {
-    const delta = Date.now() - gStartTime
-    const formattedTime = formatTime(delta)
-
-    const elTimer = document.querySelector(".timer")
-    elTimer.innerText = formattedTime
-  }, TIMER_INTERVAL)
-}
-
-function formatTime(ms) {
-  var seconds = Math.floor(ms / 1000)
-
-  return `${padTime(seconds)}`
-}
-
-function padTime(val) {
-  return String(val).padStart(3, "0")
-}
-
-function resetGame() {
-  if (gLevel.SIZE === 4) {
-    gGame.lives = 1
-    gGame.numOfHints = 1
-    gGame.usedHints = 0
-  } else if (gLevel.SIZE === 8) {
-    gGame.lives = 2
-    gGame.numOfHints = 2
-    gGame.usedHints = 0
-  } else {
-    gGame.lives = 3
-    gGame.numOfHints = 3
-    gGame.usedHints = 0
-  }
-
-  updateLives()
-  updateHints()
-  onInit()
-}
-
-
 function getDifficultyLevel() {
   if (gLevel.SIZE === 4) return 'Easy';
   if (gLevel.SIZE === 8) return 'Medium';
@@ -407,30 +229,3 @@ function getDifficultyLevel() {
 }
 
 
-function onChangeDifficulty(elBtn) {
-  var elTxt = elBtn.innerText;
-
-  // Set level configuration based on difficulty
-  if (elTxt === "Easy") {
-      gLevel.SIZE = 4;
-      gLevel.BOMBS = 2;
-      gGame.lives = 1;
-      gGame.numOfHints = 1;
-      gGame.usedHints = 0;
-  } else if (elTxt === "Medium") {
-      gLevel.SIZE = 8;
-      gLevel.BOMBS = 14;
-      gGame.lives = 2;
-      gGame.numOfHints = 2;
-      gGame.usedHints = 0;
-  } else {
-      gLevel.SIZE = 12;
-      gLevel.BOMBS = 32;
-      gGame.lives = 3;
-      gGame.numOfHints = 3;
-      gGame.usedHints = 0;
-  }
-
-  onInit();
-
-}

@@ -78,3 +78,9 @@ function showBombs()
         clearInterval(gTimerInterval)
     }, 100)
 }
+
+
+function updateBombCounter() {
+    const elBombsCounter = document.querySelector(".bombsCounter");
+    elBombsCounter.innerText = gLevel.BOMBS;
+}

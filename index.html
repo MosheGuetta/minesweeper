@@ -10,27 +10,39 @@
 <body onload="onInit()">
     <div class="container">
         <h1>Mine Sweeper</h1>
-    
+
         <div class="statusBar">
             <span>Bombs left: <span class="bombsCounter"></span></span>
             <button class="btn restart" onclick="resetGame()">😃</button>
             <span>Lives: <span class="lives"></span></span>
             <span>Time: <span class="timer">000</span></span>
+            <button id="safeClickButton" class="btn safe-click-button" onclick="onSafeClick()">Safe Clicks</button>
+
         </div>
-    
+
         <div class="card-game">
             <table></table>
         </div>
-    
+
         <h4>Hints:</h4>
         <div class="hints"></div>
-    
+
         <div class="difficulty-container">
             <button onclick="onChangeDifficulty(this)" class="btn difficulty">Easy</button>
             <button onclick="onChangeDifficulty(this)" class="btn difficulty">Medium</button>
             <button onclick="onChangeDifficulty(this)" class="btn difficulty">Hard</button>
+            <button onclick="startManualSetup()" class="btn difficulty">Manual Mode</button>
         </div>
-    
+
+        <div id="manualModeOptions" style="display:none;">
+            <label for="boardSize">Enter Board Size (min 4, max 24):</label>
+            <input type="number" id="boardSize" min="4" max="24" value="4">
+            <button class="btn manual-start" onclick="startManualMode()">Start Manual Mode</button>
+        </div>
+
+        <button id="startGameButton" class="btn start-game" style="display:none;" onclick="startGame()">Start Game</button> 
+        
+
         <div class="score-table-container">
             <h4>Leaderboard:</h4>
             <table class="score-table">
@@ -39,8 +51,11 @@
                         <th colspan="2">Easy</th>
                         <th colspan="2">Medium</th>
                         <th colspan="2">Hard</th>
+                        <th colspan="2">Manual Mode</th>
                     </tr>
                     <tr>
+                        <th>Name</th>
+                        <th>Score</th>
                         <th>Name</th>
                         <th>Score</th>
                         <th>Name</th>
@@ -53,13 +68,20 @@
             </table>
         </div>
     </div>
-    
-
-
 
     <script src="js/utils.js"></script>
+    <script src="js/addFlag.js"></script>
+    <script src="js/changeLevel.js"></script>
     <script src="js/bombs.js"></script>
+    <script src="js/board.js"></script>
     <script src="js/scores.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/lives.js"></script>
+    <script src="js/hints.js"></script>
+    <script src="js/resetGame.js"></script>
+    <script src="js/manualMode.js"></script>
+    <script src="js/safeClick.js"></script>
     <script src="js/game.js"></script>
+    
 </body>
 </html>
