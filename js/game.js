@@ -11,6 +11,7 @@ const USED_HINT = "🤐"
 let gLevel = {
   SIZE: 4,
   BOMBS: 2,
+  NAME: 'Easy'
 };
 
 let gGame = {
@@ -162,6 +163,15 @@ function checkGameOver(isLost = false) {
   let nonBombCells = totalCells - gLevel.BOMBS;
   let unopenedBombCells = gLevel.BOMBS - gGame.markedCount; // Unopened bomb cells
 
+  // Check if there are no non-bomb cells (i.e., the board is only bombs)
+  if (gLevel.BOMBS === totalCells) {
+      alert('Game over: Only bombs are on the board!');
+      showAllCells(); // Reveal all cells
+      gGame.isOn = false; // Stop the game
+      clearInterval(gTimerInterval); // Stop the timer
+      return;
+  }
+
   // If all non-bomb cells are revealed or if the player lost
   if (gGame.shownCount === nonBombCells || isLost) {
       showAllCells(); // Reveal all cells
@@ -187,22 +197,22 @@ function checkGameOver(isLost = false) {
 
       // Prompt for player name with result message included
       let playerName = prompt(finalMessage + "Enter your name:", "Anonymous");
-      
-      let difficulty = getDifficultyLevel();
-      saveScore(difficulty, playerName);
+
+      let level = getDifficultyLevel()
+      saveScore(level, playerName);
+
 
       // Show win/lose message on the screen
       const gameOutcome = document.getElementById('gameOutcome');
       gameOutcome.style.display = 'block';
       gameOutcome.innerHTML = resultMessage + `Your score: ${gGame.score}`;
 
-      // Update the restart button emoji based on the outcome
-      document.querySelector('.restart').innerText = isLost ? '😞' : '😎';
-
       // Update the table immediately after the game ends
       updateScoreTable();
   }
 }
+
+
 
 
 function showAllCells() {
@@ -223,9 +233,15 @@ function showAllCells() {
 
 
 function getDifficultyLevel() {
-  if (gLevel.SIZE === 4) return 'Easy';
-  if (gLevel.SIZE === 8) return 'Medium';
+  // Prioritize Manual Mode
+  if (gLevel.NAME === 'Manual Mode') return 'Manual Mode';
+
+  // Default to size-based difficulty
+  if (gLevel.SIZE <= 4) return 'Easy';
+  if (gLevel.SIZE <= 11) return 'Medium';
   return 'Hard';
 }
+
+
 
 

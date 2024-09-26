@@ -24,24 +24,25 @@ function startManualSetup() {
         manualModeButton.style.display = 'none';
     }
 
-    resetGame()
+    resetGame();
 }
 
 function startManualMode() {
+    gLevel.NAME = 'Manual Mode';
+
     let boardSize = parseInt(document.getElementById('boardSize').value);
     if (boardSize < 4 || boardSize > 24) {
         alert("Please enter a size between 4 and 24.");
         return;
     }
 
-    // Reset the game, lives, and timer for manual mode
     gLevel.SIZE = boardSize;
     gLevel.BOMBS = 0; // Bombs added manually
     gManualBombsPlaced = 0;
     gGame.safeClicks = 1; // One safe click for manual mode
 
     resetGame(); // Reset game state
-    initSafeClick()
+    initSafeClick();
 
     buildBoard(); // Create board of given size
     adjustLivesAndHints(boardSize); // Adjust lives/hints based on size
@@ -50,24 +51,10 @@ function startManualMode() {
     document.getElementById('safeClickButton').style.display = 'inline'; // Show safe click button
 
     gGame.isOn = false;
-
     const startGameButton = document.getElementById('startGameButton');
     startGameButton.style.display = 'inline-block';
 }
 
-
-
-function startManualGame() {
-    gManualMode = false; // Disable manual mode
-    gGame.isOn = true; // Start the game
-
-    // Hide "Start Game" button after game starts
-    const startGameButton = document.getElementById('startGameButton');
-    startGameButton.style.display = 'none';
-
-    // Cover the bombs (hide them) before the game starts
-    hideBombs();
-}
 
 
 function startGame() {
@@ -76,7 +63,7 @@ function startGame() {
     gGame.isOn = true; // Start the game
     document.getElementById('startGameButton').style.display = 'none'; // Hide the start button
     startTimer(); // Start the game timer
-    setMinesNegsCount()
+    setMinesNegsCount();
 }
 
 function hideBombs() {

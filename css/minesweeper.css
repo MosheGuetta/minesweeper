@@ -16,7 +16,7 @@ body {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     width: 90%; /* Make it wider to fit larger content */
     height: auto; /* Remove fixed height */
-    max-width: 600px; /* Limit the maximum width */
+    max-width: 700px; /* Limit the maximum width */
     margin: 0 auto;
     overflow: visible; /* Remove the scroll behavior */
 }
