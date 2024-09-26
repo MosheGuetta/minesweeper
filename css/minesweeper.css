@@ -2,8 +2,8 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    align-items: flex-start; /* Ensures scrolling starts from the top */
+    min-height: 100vh;
     background-color: #f5f5f5;
     margin: 0;
 }
@@ -14,7 +14,16 @@ body {
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 500px;
+    width: 90%; /* Make it wider to fit larger content */
+    height: auto; /* Remove fixed height */
+    max-width: 600px; /* Limit the maximum width */
+    margin: 0 auto;
+    overflow: visible; /* Remove the scroll behavior */
+}
+
+
+.card-game {
+    margin-bottom: 20px;
     height: auto;
 }
 
@@ -73,13 +82,15 @@ td.shown {
     color: black; 
 }
 
-.statusBar{
+.statusBar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
     width: 100%;
     box-sizing: border-box;
+    position: relative;
+    z-index: 1;
 }
 
 .statusBar .restart {
@@ -113,3 +124,45 @@ td.shown {
     opacity: 0.6;
     pointer-events: none;
 }
+
+.scores {
+    max-height: 350px;
+    overflow-y: auto; /* Make the score table scroll */
+    margin-top: 20px;
+}
+
+.score-table-container {
+    margin-top: 20px;
+    overflow: visible; /* Disable table scroll */
+    height: auto; /* Allow the table to grow */
+    width: auto; /* Automatically size the table based on its content */
+}
+
+table.score-table {
+    width: 50%; /* Adjust this value to make the table smaller */
+    margin: 0 auto; /* Center the table within the container */
+    border-collapse: collapse;
+}
+
+.score-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.score-table th, .score-table td {
+    padding: 8px;
+    border: 3px solid #ddd;
+    text-align: center;
+}
+
+.score-table th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+.score-table td {
+    font-size: 16px;
+}
+
+

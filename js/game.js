@@ -1,12 +1,12 @@
-"use strict";
+"use strict"
 
-const TIMER_INTERVAL = 31; // how ofen the timer updataes. with prime number
+const TIMER_INTERVAL = 31 // how ofen the timer updataes. with prime number
 //                              we can see all of the milseconds
-const INITIAL_TIMER_TEXT = "000"; // the way the timer will look like
+const INITIAL_TIMER_TEXT = "000" // the way the timer will look like
 
-const BOMB = "💣";
-const REGULAR_HINT = "🤔";
-const USED_HINT = "🤐";
+const BOMB = "💣"
+const REGULAR_HINT = "🤔"
+const USED_HINT = "🤐"
 
 let gLevel = {
   SIZE: 4,
@@ -22,12 +22,20 @@ let gGame = {
   isHintActive: false,
   numOfHints: 1,
   usedHints: 0,
-};
+  score: 0,
+}
 
-let gBoard = [];
-let gBombsCount;
-let gTimerInterval; // holds the interval
+let gBoard = []
+let gBombsCount
+let gTimerInterval // holds the interval
 let gStartTime; // what time the game strats
+
+let gScores = {
+  Easy: JSON.parse(localStorage.getItem('scoreEasy')) || [],
+  Medium: JSON.parse(localStorage.getItem('scoreMedium')) || [],
+  Hard: JSON.parse(localStorage.getItem('scoreHard')) || []
+}
+
 
 function onInit() {
   clearInterval(gTimerInterval);
@@ -36,24 +44,28 @@ function onInit() {
   var elTimer = document.querySelector(".timer");
   elTimer.innerText = INITIAL_TIMER_TEXT;
 
-  document.querySelector(".restart").innerText = REGULAR_HINT;
+  document.querySelector(".restart").innerText = '😃'; 
 
   gGame.isOn = true;
   gGame.shownCount = 0; // reset the cells the player clicked on
   gGame.markedCount = 0; // reset the cells the player set flag
+  gGame.score = 0;
 
-  buildBoard();
+
+  buildBoard()
   updateBombCounter();
   updateLives();
   updateHints();
+  updateScoreTable(); 
 }
 
+
 function buildBoard() {
-  var boardSize = gLevel.SIZE;
-  gBoard = [];
+  var boardSize = gLevel.SIZE
+  gBoard = []
 
   for (var i = 0; i < boardSize; i++) {
-    gBoard[i] = [];
+    gBoard[i] = []
     for (var j = 0; j < boardSize; j++) {
       let currCell =
         // each cell in the board will have:
@@ -64,24 +76,24 @@ function buildBoard() {
           isMarked: false, // if the cell has a flag
         };
 
-      gBoard[i][j] = currCell;
+      gBoard[i][j] = currCell
     }
   }
 
-  renderBoard();
+  renderBoard()
 }
 
 function renderBoard() {
-  var strHTML = "<table>";
+  var strHTML = "<table>"
 
   for (var i = 0; i < gBoard.length; i++) {
-    strHTML += "<tr>";
+    strHTML += "<tr>"
 
     for (var j = 0; j < gBoard.length; j++) {
-      let cellClass = "";
+      let cellClass = ""
 
       if (gBoard[i][j].isShown) {
-        cellClass = "shown"; // if the cell was clicked we had the shown class
+        cellClass = "shown" // if the cell was clicked we had the shown class
       }
 
       strHTML += ` 
@@ -89,95 +101,86 @@ function renderBoard() {
                     class="cell-${i}-${j} ${cellClass}" 
                     onclick="onCellClicked(this, ${i}, ${j})"
                     oncontextmenu="onCellMarked(event, this, ${i}, ${j})">
-                </td>`;
+                </td>`
     }
-    strHTML += "</tr>";
+    strHTML += "</tr>"
   }
 
-  strHTML += "</table>";
-  document.querySelector(".card-game").innerHTML = strHTML;
+  strHTML += "</table>"
+  document.querySelector(".card-game").innerHTML = strHTML
 }
 
 function onCellClicked(elCell, i, j) {
-  if (!gGame.isOn) return; // Stop if the game is over
+  if (!gGame.isOn) return;
 
   const currCell = gBoard[i][j];
-
-  // If the cell is already shown or marked, do nothing
   if (currCell.isShown || currCell.isMarked) return;
 
   if (gGame.isHintActive) {
-    showCellForSecond(i, j);
-    gGame.isHintActive = false;
-    // gGame.numOfHints--
-    updateHints();
-    return;
+      showCellForSecond(i, j);
+      gGame.isHintActive = false;
+      gGame.score -= 5; // Lose 5 points when using a hint
+      updateHints();
+      return;
   }
 
-  // First click: Place bombs and start the timer
   if (!gStartTime) {
-    startTimer();
-    placeBombs(i, j); // Place bombs after the first click, excluding this cell
+      startTimer();
+      placeBombs(i, j); // Place bombs after the first click
   }
 
-  // Case 1: If the clicked cell is a bomb, reveal all bombs and end the game
-  // TO DO: ADD LIVES
   if (currCell.isBomb) {
-    gGame.lives--;
-    gLevel.BOMBS--;
-    updateLives();
-    updateBombCounter();
+      gGame.lives--;
+      updateLives();
+      updateBombCounter();
 
-    currCell.isShown = true;
-    elCell.classList.add("shown");
-    elCell.innerText = BOMB;
+      currCell.isShown = true;
+      elCell.classList.add("shown");
+      elCell.innerText = BOMB;
 
-    if (gGame.lives === 0) {
-      showBombs();
+      if (gGame.lives === 0) {
+          checkGameOver(true); // Lose the game
+          return;
+      }
       return;
-    } else {
-      alert(`You hit a bomb, you have ${gGame.lives} lives`);
-      return;
-    }
   }
 
-  // Case 2: Reveal the current cell
   currCell.isShown = true;
   gGame.shownCount++;
+  gGame.score += 10; // Each revealed cell gives 10 points
   elCell.classList.add("shown");
   elCell.innerText = currCell.negBombsCount > 0 ? currCell.negBombsCount : "";
 
-  // Case 3: If the cell has no neighboring bombs, recursively reveal neighbors
   if (currCell.negBombsCount === 0) {
-    expandShown(i, j); // Recursively reveal neighboring cells
+      expandShown(i, j);
   }
 
-  // Check if the player won the game
-  checkGameOver();
+  checkGameOver(); // Check if the game is won
 }
+
 
 function expandShown(cellI, cellJ) {
   for (var i = cellI - 1; i <= cellI + 1; i++) {
     for (var j = cellJ - 1; j <= cellJ + 1; j++) {
-      if (i === cellI && j === cellJ) continue; // Skip the original cell
+      if (i === cellI && j === cellJ) continue // Skip the original cell
 
       if (i < 0 || j < 0 || i >= gBoard.length || j >= gBoard[i].length)
         continue; // check borders
 
-      const currCell = gBoard[i][j];
-      const elCell = document.querySelector(`.cell-${i}-${j}`);
+      const currCell = gBoard[i][j]
+      const elCell = document.querySelector(`.cell-${i}-${j}`)
 
       // Only reveal unshown, unmarked, non-bomb cells
       if (!currCell.isShown && !currCell.isBomb && !currCell.isMarked) {
-        currCell.isShown = true;
-        gGame.shownCount++;
-        elCell.classList.add("shown");
+        currCell.isShown = true
+        gGame.shownCount++
+        elCell.classList.add("shown")
         elCell.innerText =
-          currCell.negBombsCount > 0 ? currCell.negBombsCount : "";
+          currCell.negBombsCount > 0 ? currCell.negBombsCount : ""
 
         // Recursively expand only if the current cell has no neighboring bombs
         if (currCell.negBombsCount === 0) {
-          expandShown(i, j); // Recursion for empty cells
+          expandShown(i, j) // Recursion for empty cells
         }
       }
     }
@@ -185,206 +188,249 @@ function expandShown(cellI, cellJ) {
 }
 
 function showCellForSecond(cellI, cellJ) {
-  const cellsToShow = [];
+  const cellsToShow = []
 
   for (var i = cellI - 1; i <= cellI + 1; i++) {
     for (var j = cellJ - 1; j <= cellJ + 1; j++) {
       if (i < 0 || j < 0 || i >= gBoard.length || j >= gBoard.length) continue; // out of borders
-      const currCell = gBoard[i][j];
+      const currCell = gBoard[i][j]
 
       if (!currCell.isShown) {
         cellsToShow.push({
           cell: currCell,
           elCell: document.querySelector(`.cell-${i}-${j}`),
-        });
-        currCell.isShown = true;
-        const elCell = document.querySelector(`.cell-${i}-${j}`);
-        elCell.classList.add("shown");
-        elCell.innerText = currCell.isBomb
+        })
+        currCell.isShown = true
+        const elCell = document.querySelector(`.cell-${i}-${j}`)
+        elCell.classList.add("shown")
+        elCell.innerText = currCell.isBomb 
           ? BOMB
           : currCell.negBombsCount > 0
           ? currCell.negBombsCount
-          : "";
+          : ""
       }
     }
   }
 
   setTimeout(() => {
     cellsToShow.forEach(({ cell, elCell }) => {
-      cell.isShown = false;
-      elCell.classList.remove("shown");
-      elCell.innerText = "";
+      cell.isShown = false
+      elCell.classList.remove("shown")
+      elCell.innerText = ""
     });
 
-    gGame.isHintActive = false;
-  }, 1000);
+    gGame.isHintActive = false
+  }, 1000)
 }
 
-function checkGameOver() {
+
+function checkGameOver(isLost = false) {
   let totalCells = gBoard.length * gBoard[0].length;
   let nonBombCells = totalCells - gLevel.BOMBS;
+  let unopenedBombCells = gLevel.BOMBS - gGame.markedCount; // Unopened bomb cells
 
-  if (gGame.shownCount === nonBombCells) {
-    showAllCells();
+  // If all non-bomb cells are revealed or if the player lost
+  if (gGame.shownCount === nonBombCells || isLost) {
+      showAllCells(); // Reveal all cells
+      gGame.isOn = false; // Stop the game
+      clearInterval(gTimerInterval); // Stop the timer
 
-    document.querySelector(".restart").innerText = "😎";
+      // Update score if the player won
+      if (!isLost) {
+          gGame.score += unopenedBombCells * 20; // Each unopened bomb cell gives 20 points
+          if (gGame.lives > 0) gGame.score += gGame.lives * 25; // Extra points for remaining lives
+      }
 
-    setTimeout(() => {
-      alert("You won!");
+      // Update the restart button emoji based on the outcome
+      if (isLost) {
+          document.querySelector('.restart').innerText = '😞'; // Set to sad face on loss
+      } else {
+          document.querySelector('.restart').innerText = '😎'; // Set to cool face on win
+      }
 
-      gGame.isOn = false;
-      clearInterval(gTimerInterval);
-    }, 100);
+      // Determine win/lose message
+      let resultMessage = isLost ? `You Lost! ` : `You Won! `;
+      let finalMessage = `${resultMessage}Your score: ${gGame.score}\n`;
+
+      // Prompt for player name with result message included
+      let playerName = prompt(finalMessage + "Enter your name:", "Anonymous");
+      
+      let difficulty = getDifficultyLevel();
+      saveScore(difficulty, playerName);
+
+      // Show win/lose message on the screen
+      const gameOutcome = document.getElementById('gameOutcome');
+      gameOutcome.style.display = 'block';
+      gameOutcome.innerHTML = resultMessage + `Your score: ${gGame.score}`;
+
+      // Update the restart button emoji based on the outcome
+      document.querySelector('.restart').innerText = isLost ? '😞' : '😎';
+
+      // Update the table immediately after the game ends
+      updateScoreTable();
   }
 }
+
 
 function updateLives() {
-  const elLives = document.querySelector(".lives");
-  let livesHTML = "";
+  const elLives = document.querySelector(".lives")
+  let livesHTML = ""
 
   for (var i = 0; i < gGame.lives; i++) {
-    livesHTML += "💛";
+    livesHTML += "💛"
   }
 
-  elLives.innerHTML = livesHTML;
+  elLives.innerHTML = livesHTML
 }
 
+
 function updateHints() {
-  const elHints = document.querySelector(".hints");
-  let hintsHTML = "";
+  const elHints = document.querySelector(".hints")
+  let hintsHTML = ""
 
   for (let i = 0; i < gGame.numOfHints; i++) {
     if (i < gGame.usedHints) {
       // Render used hints
-      hintsHTML += `<span class="hint used-hint">${USED_HINT}</span> `;
+      hintsHTML += `<span class="hint used-hint">${USED_HINT}</span> `
     } else {
       // Render unused hints
-      hintsHTML += `<span class="hint" onclick="activateHint(this)">${REGULAR_HINT}</span> `;
+      hintsHTML += `<span class="hint" onclick="activateHint(this)">${REGULAR_HINT}</span> `
     }
   }
 
-  elHints.innerHTML = hintsHTML;
+  elHints.innerHTML = hintsHTML
 }
+
 
 function activateHint(elHint) {
   if (!gGame.isHintActive && gGame.numOfHints > gGame.usedHints) {
-    elHint.innerText = USED_HINT;
-    elHint.classList.add("used-hint");
-    elHint.onclick = null;
-    gGame.usedHints++;
-    gGame.isHintActive = true;
+    elHint.innerText = USED_HINT
+    elHint.classList.add("used-hint")
+    elHint.onclick = null
+    gGame.usedHints++
+    gGame.isHintActive = true
   }
 }
 
 function showAllCells() {
   for (var i = 0; i < gBoard.length; i++) {
     for (var j = 0; j < gBoard[i].length; j++) {
-      const currCell = gBoard[i][j];
+      const currCell = gBoard[i][j]
 
       if (!currCell.isBomb && !currCell.isShown) {
-        const elCell = document.querySelector(`.cell-${i}-${j}`);
-        currCell.isShown = true;
-        elCell.classList.add("shown");
+        const elCell = document.querySelector(`.cell-${i}-${j}`)
+        currCell.isShown = true
+        elCell.classList.add("shown")
         elCell.innerText =
-          currCell.negBombsCount > 0 ? currCell.negBombsCount : "";
+          currCell.negBombsCount > 0 ? currCell.negBombsCount : ""
       }
     }
   }
 }
 
+
 function onCellMarked(event, elCell, i, j) {
-  event.preventDefault(); // remove the regular right click actionnnnnn
+  event.preventDefault() // remove the regular right click actionnnnnn
 
-  if (!gGame.isOn) return;
-  const currCell = gBoard[i][j];
+  if (!gGame.isOn) return
+  const currCell = gBoard[i][j]
 
-  if (currCell.isShown) return;
+  if (currCell.isShown) return
 
-  currCell.isMarked = !currCell.isMarked;
+  currCell.isMarked = !currCell.isMarked
 
   if (currCell.isMarked) {
-    elCell.innerText = "🚩";
-    gGame.markedCount++;
+    elCell.innerText = "🚩"
+    gGame.markedCount++
   } else {
-    elCell.innerText = "";
-    gGame.markedCount--;
+    elCell.innerText = ""
+    gGame.markedCount--
   }
 
-  updateBombCounter();
-  checkGameOver();
+  updateBombCounter()
+  checkGameOver()
 }
 
+
 function updateBombCounter() {
-  const elBombsCounter = document.querySelector(".bombsCounter");
-  elBombsCounter.innerText = gLevel.BOMBS - gGame.markedCount;
+  const elBombsCounter = document.querySelector(".bombsCounter")
+  elBombsCounter.innerText = gLevel.BOMBS - gGame.markedCount
 }
 
 function startTimer() {
-  gStartTime = Date.now();
+  gStartTime = Date.now()
 
   gTimerInterval = setInterval(() => {
-    const delta = Date.now() - gStartTime;
-    const formattedTime = formatTime(delta);
+    const delta = Date.now() - gStartTime
+    const formattedTime = formatTime(delta)
 
-    const elTimer = document.querySelector(".timer");
-    elTimer.innerText = formattedTime;
-  }, TIMER_INTERVAL);
+    const elTimer = document.querySelector(".timer")
+    elTimer.innerText = formattedTime
+  }, TIMER_INTERVAL)
 }
 
 function formatTime(ms) {
-  var seconds = Math.floor(ms / 1000);
+  var seconds = Math.floor(ms / 1000)
 
-  return `${padTime(seconds)}`;
+  return `${padTime(seconds)}`
 }
 
 function padTime(val) {
-  return String(val).padStart(3, "0");
+  return String(val).padStart(3, "0")
 }
 
 function resetGame() {
   if (gLevel.SIZE === 4) {
-    gGame.lives = 1;
-    gGame.numOfHints = 1;
-    gGame.usedHints = 0;
+    gGame.lives = 1
+    gGame.numOfHints = 1
+    gGame.usedHints = 0
   } else if (gLevel.SIZE === 8) {
-    gGame.lives = 2;
-    gGame.numOfHints = 2;
-    gGame.usedHints = 0;
+    gGame.lives = 2
+    gGame.numOfHints = 2
+    gGame.usedHints = 0
   } else {
-    gGame.lives = 3;
-    gGame.numOfHints = 3;
-    gGame.usedHints = 0;
+    gGame.lives = 3
+    gGame.numOfHints = 3
+    gGame.usedHints = 0
   }
 
-  updateLives();
-  updateHints();
-  onInit();
+  updateLives()
+  updateHints()
+  onInit()
 }
+
+
+function getDifficultyLevel() {
+  if (gLevel.SIZE === 4) return 'Easy';
+  if (gLevel.SIZE === 8) return 'Medium';
+  return 'Hard';
+}
+
 
 function onChangeDifficulty(elBtn) {
   var elTxt = elBtn.innerText;
 
+  // Set level configuration based on difficulty
   if (elTxt === "Easy") {
-    gLevel.SIZE = 4;
-    gLevel.BOMBS = 2;
-    gGame.lives = 1;
-    gGame.numOfHints = 1;
-    gGame.usedHints = 0;
+      gLevel.SIZE = 4;
+      gLevel.BOMBS = 2;
+      gGame.lives = 1;
+      gGame.numOfHints = 1;
+      gGame.usedHints = 0;
   } else if (elTxt === "Medium") {
-    gLevel.SIZE = 8;
-    gLevel.BOMBS = 14;
-    gGame.lives = 2;
-    gGame.numOfHints = 2;
-    gGame.usedHints = 0;
+      gLevel.SIZE = 8;
+      gLevel.BOMBS = 14;
+      gGame.lives = 2;
+      gGame.numOfHints = 2;
+      gGame.usedHints = 0;
   } else {
-    gLevel.SIZE = 12;
-    gLevel.BOMBS = 32;
-    gGame.lives = 3;
-    gGame.numOfHints = 3;
-    gGame.usedHints = 0;
+      gLevel.SIZE = 12;
+      gLevel.BOMBS = 32;
+      gGame.lives = 3;
+      gGame.numOfHints = 3;
+      gGame.usedHints = 0;
   }
 
-  updateLives();
-  updateHints();
   onInit();
+
 }

@@ -10,40 +10,56 @@
 <body onload="onInit()">
     <div class="container">
         <h1>Mine Sweeper</h1>
-
+    
         <div class="statusBar">
-            <span>Bombs left:
-                <span class="bombsCounter"></span>
-            </span>
-
+            <span>Bombs left: <span class="bombsCounter"></span></span>
             <button class="btn restart" onclick="resetGame()">😃</button>
-
-            <span>Lives:
-                <span class="lives"></span>
-            </span>
-
-            <span>
-                Time: 
-                <span class="timer">000 </span>
-            </span>
+            <span>Lives: <span class="lives"></span></span>
+            <span>Time: <span class="timer">000</span></span>
         </div>
-
+    
         <div class="card-game">
             <table></table>
         </div>
-
+    
         <h4>Hints:</h4>
         <div class="hints"></div>
-
+    
         <div class="difficulty-container">
             <button onclick="onChangeDifficulty(this)" class="btn difficulty">Easy</button>
             <button onclick="onChangeDifficulty(this)" class="btn difficulty">Medium</button>
             <button onclick="onChangeDifficulty(this)" class="btn difficulty">Hard</button>
         </div>
+    
+        <div class="score-table-container">
+            <h4>Leaderboard:</h4>
+            <table class="score-table">
+                <thead>
+                    <tr>
+                        <th colspan="2">Easy</th>
+                        <th colspan="2">Medium</th>
+                        <th colspan="2">Hard</th>
+                    </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>Score</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
+    
+
+
 
     <script src="js/utils.js"></script>
     <script src="js/bombs.js"></script>
+    <script src="js/scores.js"></script>
     <script src="js/game.js"></script>
 </body>
 </html>
