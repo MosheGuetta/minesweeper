@@ -1,63 +1,51 @@
 body {
     font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Ensures scrolling starts from the top */
     min-height: 100vh;
-    background-color: #f5f5f5;
     margin: 0;
+    padding: 0;
+    background-image: url('../img/filed.jpeg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 20px;
 }
 
-.container {
-    text-align: center;
-    background-color: #fff;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 90%; /* Make it wider to fit larger content */
-    height: auto; /* Remove fixed height */
-    max-width: 700px; /* Limit the maximum width */
-    margin: 0 auto;
-    overflow: visible; /* Remove the scroll behavior */
+.card-game table { 
+    margin: 20px 0;
+    border-spacing: 15px; 
 }
 
-
-.card-game {
-    margin-bottom: 20px;
-    height: auto;
-}
-
-
-table {
-    margin: 0 auto;
-    border-spacing: 0;
-}
-
-
-table td {
+.card-game td { 
     width: 30px;
     height: 30px;
-    font-size: 14px;
+    font-size: 16px;
     text-align: center;
-    background-color: #5674ba;
+    background-color: #101011;
     color: white;
-    border: 2px solid #fff;
+    border-radius: 50%; 
     cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+    transition: background-color 0.3s ease;
 }
 
-
-.timer {
-    font-family: monospace;
-    white-space: nowrap;               
-    width: 100px;                      
+.card-game td:hover {
+    background-color: #435a93; 
 }
 
-.difficulty-container {
-    margin-top: 20px;
+td.shown {
+    background-color: rgb(233, 246, 147);
+    color: black; 
 }
 
-.difficulty-container button {
-    margin: 5px;
+.statusBar, .hints, .difficulty-container, .score-table-container {
+    margin: 10px 0;
+    background-color: rgba(193, 235, 253, 0.7); /* Slight transparency */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Soft shadow */
 }
 
 .btn {
@@ -66,7 +54,6 @@ table td {
     cursor: pointer;
     margin-top: 5px;
 }
-
 
 .btn.difficulty {
     background-color: #2196f3;
@@ -77,82 +64,35 @@ table td {
     margin-bottom: 20px;
 }
 
-td.shown {
-    background-color: rgb(151, 151, 2);
-    color: black; 
-}
-
-.statusBar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    width: 100%;
-    box-sizing: border-box;
-    position: relative;
-    z-index: 1;
-}
-
-.statusBar .restart {
-    font-size: 24px;
-    background-color: transparent;
+.btn.safe-click-button {
+    background-color: #4CAF50;
+    color: white;
     border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
     cursor: pointer;
-}
-
-.statusBar span {
-    flex: 1;
-    text-align: center;
-}
-
-
-.lives-display {
-    margin-bottom: 10px;
-}
-
-.lives {
     display: inline-block;
-    font-size: 20px;
 }
 
-.hints {
-    font-size: 40px;
-    cursor: pointer;
-}
-
-.used-hint {
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-.scores {
-    max-height: 350px;
-    overflow-y: auto; /* Make the score table scroll */
-    margin-top: 20px;
-}
-
-.score-table-container {
-    margin-top: 20px;
-    overflow: visible; /* Disable table scroll */
-    height: auto; /* Allow the table to grow */
-    width: auto; /* Automatically size the table based on its content */
-}
-
-table.score-table {
-    width: 50%; /* Adjust this value to make the table smaller */
-    margin: 0 auto; /* Center the table within the container */
-    border-collapse: collapse;
+.btn.safe-click-button:hover {
+    background-color: #45a049;
 }
 
 .score-table {
-    width: 100%;
-    border-collapse: collapse;
+    width: 80%; 
+    margin: 0 auto;
+    border-collapse: collapse; 
+    border-spacing: 0; 
 }
 
 .score-table th, .score-table td {
     padding: 8px;
-    border: 3px solid #ddd;
+    border: 2px solid #ddd; 
     text-align: center;
+    border-radius: 0; 
+    background-color: rgba(255, 255, 255, 0.9); 
+    box-shadow: none; 
 }
 
 .score-table th {
@@ -165,57 +105,22 @@ table.score-table {
     font-size: 16px;
 }
 
-.safe-click {
-    background-color: lightgreen; /* Highlight safe cells in green */
-  }
-
-  .btn.safe-click-button {
-    background-color: #4CAF50; /* Green color */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 12px; /* Slightly smaller padding */
-    font-size: 14px; /* Smaller font size */
-    cursor: pointer;
-    margin-top: 5px;
-    display: inline-block;
-}
-
-.btn.safe-click-button:hover {
-    background-color: #45a049;
-}
-
-
-.btn.manual-mode {
-    background-color: #f243f8; /* Orange color for manual mode */
-    color: white;
-    border: none;
-    border-radius: 5px;
+.statusBar span {
     font-size: 16px;
-    width: auto;
+    margin: 0 10px;
 }
 
-#manualModeOptions {
-    margin-top: 20px;
-}
-
-.manual-start {
-    background-color: #4CAF50; /* Green for start button */
-    color: white;
+.statusBar .restart {
+    font-size: 24px;
+    background-color: transparent;
     border: none;
-    border-radius: 5px;
-    padding: 8px 12px;
-    font-size: 14px;
     cursor: pointer;
+    margin: 0 10px; /* Add some spacing to the reset button */
+    text-align: center;
 }
 
-.btn.start-game {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
+.timer {
+    font-family: monospace;
     font-size: 18px;
-    cursor: pointer;
-    margin-top: 10px;
+    white-space: nowrap;
 }

@@ -5,7 +5,7 @@ function updateLives() {
     let livesHTML = ""
   
     for (var i = 0; i < gGame.lives; i++) {
-      livesHTML += "💛"
+      livesHTML += "💙"
     }
   
     elLives.innerHTML = livesHTML
