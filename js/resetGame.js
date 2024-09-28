@@ -1,22 +1,21 @@
 'use strict'
 
 function resetGame() {
-    // Reset lives, hints, and safe clicks based on board size
     if (gLevel.SIZE <= 4) {
         gGame.lives = 1;
         gGame.numOfHints = 1;
         gGame.usedHints = 0;
-        gGame.safeClicks = 1;  // Easy mode
+        gGame.safeClicks = 1;  
     } else if (gLevel.SIZE <= 11) {
         gGame.lives = 2;
         gGame.numOfHints = 2;
         gGame.usedHints = 0;
-        gGame.safeClicks = 2;  // Medium mode
+        gGame.safeClicks = 2;  
     } else {
         gGame.lives = 3;
         gGame.numOfHints = 3;
         gGame.usedHints = 0;
-        gGame.safeClicks = 3;  // Hard mode
+        gGame.safeClicks = 3;  
     }
 
     if (gManualMode) {
@@ -24,11 +23,10 @@ function resetGame() {
         gLevel.BOMBS = 0; // Reset bombs in manual mode
     }
 
-    // Reset general game state
     updateLives();
     updateHints();
     initSafeClick();  // Initialize safe clicks
-    onInit();  // Rebuild the board and reset timer, etc.
+    onInit(); 
 }
 
   

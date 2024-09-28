@@ -39,7 +39,7 @@ function startManualMode() {
     gLevel.SIZE = boardSize;
     gLevel.BOMBS = 0; // Bombs added manually
     gManualBombsPlaced = 0;
-    gGame.safeClicks = 1; // One safe click for manual mode
+    gGame.safeClicks = 1; // safe click for manual mode
 
     resetGame(); // Reset game state
     initSafeClick();

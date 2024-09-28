@@ -67,11 +67,11 @@ function saveScore(level, playerName) {
         gScores.Hard.push(newScoreEntry);
         localStorage.setItem('scoreHard', JSON.stringify(gScores.Hard));
     } else if (level === 'Manual Mode') {
-        gScores.Manual.push(newScoreEntry);  // Add score for manual mode
+        gScores.Manual.push(newScoreEntry);  
         localStorage.setItem('scoreManual', JSON.stringify(gScores.Manual));
     }
 
-    updateScoreTable(); // Update the table right after saving the score
+    updateScoreTable(); 
 }
 
 

@@ -3,7 +3,6 @@
 function onChangeDifficulty(elBtn) {
     var elTxt = elBtn.innerText;
   
-    // Set level configuration based on difficulty
     if (elTxt === "Easy") {
         gLevel.SIZE = 4;
         gLevel.BOMBS = 2;

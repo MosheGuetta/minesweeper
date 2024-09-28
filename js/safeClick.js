@@ -30,9 +30,9 @@ function onSafeClick() {
   let safeCell = getSafeCell();
   if (safeCell) {
     safeCell.classList.add("safe-click");
-    gGame.safeClicks--;  // Decrease the safe click count
+    gGame.safeClicks--;  
 
-    updateSafeClickButton(); // Update button text
+    updateSafeClickButton(); 
 
     // Remove safe click highlight after 3 seconds
     setTimeout(() => {

@@ -113,7 +113,7 @@ function onCellClicked(elCell, i, j) {
       return;
   }
 
-  // Reveal Cell
+  // show Cell
   currCell.isShown = true;
   gGame.shownCount++;
   gGame.score += 10;
@@ -163,18 +163,18 @@ function checkGameOver(isLost = false) {
   let nonBombCells = totalCells - gLevel.BOMBS;
   let unopenedBombCells = gLevel.BOMBS - gGame.markedCount; // Unopened bomb cells
 
-  // Check if there are no non-bomb cells (i.e., the board is only bombs)
+  // Check if there are no non-bomb cells ( the board is only bombs)
   if (gLevel.BOMBS === totalCells) {
       alert('Game over: Only bombs are on the board!');
-      showAllCells(); // Reveal all cells
+      showAllCells(); // show all cells
       gGame.isOn = false; // Stop the game
       clearInterval(gTimerInterval); // Stop the timer
       return;
   }
 
-  // If all non-bomb cells are revealed or if the player lost
+  // If all non-bomb cells are shown or if the player lost
   if (gGame.shownCount === nonBombCells || isLost) {
-      showAllCells(); // Reveal all cells
+      showAllCells(); // show all cells
       gGame.isOn = false; // Stop the game
       clearInterval(gTimerInterval); // Stop the timer
 
@@ -186,16 +186,15 @@ function checkGameOver(isLost = false) {
 
       // Update the restart button emoji based on the outcome
       if (isLost) {
-          document.querySelector('.restart').innerText = '😞'; // Set to sad face on loss
+          document.querySelector('.restart').innerText = '😞'; 
       } else {
-          document.querySelector('.restart').innerText = '😎'; // Set to cool face on win
+          document.querySelector('.restart').innerText = '😎';
       }
 
-      // Determine win/lose message
+
       let resultMessage = isLost ? `You Lost! ` : `You Won! `;
       let finalMessage = `${resultMessage}Your score: ${gGame.score}\n`;
 
-      // Prompt for player name with result message included
       let playerName = prompt(finalMessage + "Enter your name:", "Anonymous");
 
       let level = getDifficultyLevel()
@@ -233,10 +232,8 @@ function showAllCells() {
 
 
 function getDifficultyLevel() {
-  // Prioritize Manual Mode
   if (gLevel.NAME === 'Manual Mode') return 'Manual Mode';
 
-  // Default to size-based difficulty
   if (gLevel.SIZE <= 4) return 'Easy';
   if (gLevel.SIZE <= 11) return 'Medium';
   return 'Hard';
