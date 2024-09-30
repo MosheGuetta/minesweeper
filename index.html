@@ -31,6 +31,15 @@
         <button onclick="startManualSetup()" class="btn difficulty">Manual Mode</button>
     </div>
 
+    <div id="manualModeOptions" style="display:none;">
+        <label for="boardSize">Enter Board Size (min 4, max 24):</label>
+        <input type="number" id="boardSize" min="4" max="24" value="4">
+        <button class="btn manual-start" onclick="startManualMode()">Start Manual Mode</button>
+    </div>
+
+    <button id="startGameButton" class="btn start-game" style="display:none;" onclick="startGame()">Start Game</button> 
+    
+
     <div class="score-table-container">
         <h4>Leaderboard:</h4>
         <table class="score-table">
